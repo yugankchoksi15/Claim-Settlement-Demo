@@ -1,30 +1,32 @@
+// pages/HomePage.tsx
 'use client';
 
-import Head from 'next/head';
-import * as React from 'react';
-import '@/lib/env';
-
-import ArrowLink from '@/components/links/ArrowLink';
-import ButtonLink from '@/components/links/ButtonLink';
-import UnderlineLink from '@/components/links/UnderlineLink';
-import UnstyledLink from '@/components/links/UnstyledLink';
-
-/**
- * SVGR Support
- * Caveat: No React Props Type.
- *
- * You can override the next-env if the type is important to you
- * @see https://stackoverflow.com/questions/68103844/how-to-override-next-js-svg-module-declaration
- */
-import Logo from '~/svg/Logo.svg';
-
-// !STARTERCONF -> Select !STARTERCONF and CMD + SHIFT + F
-// Before you begin editing, follow all comments with `STARTERCONF`,
-// to customize the default configuration.
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import ListClaim from './components/ListClaim/ListClaim';
+import Header from './components/Header/Header';
 
 export default function HomePage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if there's a token in localStorage
+    const token = localStorage.getItem('token');
+
+    // Redirect based on the presence of the token
+    if (!token) {
+      router.push('/signin'); // Redirect to the sign-in page
+    } else {
+      router.push('/'); // Redirect to the homepage/dashboard
+    }
+  }, [router]);
+
   return (
-   
-    <div>dashboard</div>
+    <div>
+      <Header />
+      <div className='mt-5'>
+      <ListClaim />
+      </div>
+    </div>
   );
 }
