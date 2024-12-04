@@ -17,7 +17,7 @@ export class RepairCenter {
   @Prop({ required: true })
   contactNumber: string;
 
-  @Prop({ default: [] })
+  @Prop({ default: [], type: [String] })
   claimsServed: string[]; // Array of Claim IDs
 }
 

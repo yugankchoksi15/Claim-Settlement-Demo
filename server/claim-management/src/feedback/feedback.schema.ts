@@ -5,17 +5,11 @@ export type FeedbackDocument = Feedback & Document;
 
 @Schema({ timestamps: true })
 export class Feedback {
-  @Prop({ required: true })
-  userId: string; // Reference to the User
-
-  @Prop({ required: true })
-  claimId: string; // Reference to the Claim
-
-  @Prop({ required: true })
+  @Prop({ required: true, min: 0, max: 10 })
   score: number; // NPS Score (0-10)
 
   @Prop({ required: true })
-  comments: string; // Optional feedback text
+  comments: string; // Feedback text
 }
 
 export const FeedbackSchema = SchemaFactory.createForClass(Feedback);
