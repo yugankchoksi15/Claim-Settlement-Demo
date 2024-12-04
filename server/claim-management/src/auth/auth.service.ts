@@ -15,17 +15,13 @@ export class AuthService {
   ) {}
 
   async register(firstName: string, lastName: string, email: string, password: string): Promise<{ user: User; token: string }> {
-    // const user = new this.userModel({ firstName, lastName, email, password });
-    // return user.save();
-
-    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user instance
     const user = new this.userModel({
       firstName,
       lastName,
       email,
-      password: hashedPassword,
+      password: password,
     });
   
     // Save the user to the database
