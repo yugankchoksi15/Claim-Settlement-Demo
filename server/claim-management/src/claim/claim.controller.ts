@@ -15,8 +15,7 @@ export class ClaimController {
   @Post()
   @ApiBody({ type: CreateClaimDto })  
   async createClaim(@Body() claim:CreateClaimDto, @Req() req: any): Promise<Claim> {
-    console.log(req.user)
-    return this.claimService.createClaim({ ...claim, userId:req.user.id });
+    return this.claimService.createClaim({ ...claim},req.user.id);
   }
 
   @Get()

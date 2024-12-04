@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 
 export type ClaimDocument = Claim & Document;
 
@@ -15,34 +15,35 @@ export enum ClaimStatus {
 @Schema({ timestamps: true })
 export class Claim {
   @Prop({ required: true })
-  userId: string; // Reference to the User
+  userId: string;
 
   @Prop({ required: true })
-  model: string; // Vehicle model
+  model: string;
 
   @Prop({ required: true })
-  company: string; // Vehicle company
+  company: string;
 
   @Prop({ required: true })
-  yearOfManufacturing: number; // Year of manufacturing
+  yearOfManufacturing: number;
 
   @Prop({ required: true })
-  vehicleNumber: string; // Vehicle registration number
+  vehicleNumber: string;
 
-  @Prop({ default: ClaimStatus.PENDING })
-  status: ClaimStatus;
+  @Prop({ default: 'Pending' })
+  status: string;
 
   @Prop({ required: true })
   issueDescription: string;
 
-  @Prop({ default: null })
-  repairCenter: string | null; // Selected repair center ID
+  // Update repairCenter and feedback to be ObjectId references
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'RepairCenter', required: true })
+  repairCenter: MongooseSchema.Types.ObjectId;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Feedback', default: null })
+  feedback: MongooseSchema.Types.ObjectId | null;
 
   @Prop({ default: [] })
-  documents: string[]; // Array of file paths or URLs for claim/policy documents
-
-  @Prop({ default: null })
-  feedback: string | null; // Feedback from user
+  documents: string[];
 
   @Prop({ default: null })
   submissionDate: Date;

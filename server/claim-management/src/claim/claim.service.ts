@@ -2,15 +2,17 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Claim, ClaimDocument, ClaimStatus } from './claim.schema';
+import { CreateClaimDto } from './claim.dto';
 
 @Injectable()
 export class ClaimService {
   constructor(@InjectModel('Claim') private readonly claimModel: Model<ClaimDocument>) {}
 
   // Create a new claim
-  async createClaim(claimDto: Partial<Claim>): Promise<Claim> {
+  async createClaim(claimInfo: CreateClaimDto, userId:string): Promise<Claim> {
     const newClaim = new this.claimModel({
-      ...claimDto,
+      ...claimInfo,
+      userId,
       submissionDate: new Date(),
     });
     return newClaim.save();
@@ -18,7 +20,10 @@ export class ClaimService {
 
   // Get all claims by a specific user
   async getClaimsByUser(userId: string): Promise<Claim[]> {
-    return this.claimModel.find({ userId }).exec();
+    return this.claimModel.find({ userId })
+      .populate('repairCenter', 'name address city contactNumber')  // Specify fields to populate
+      .populate('feedback', 'score comments') // Populating feedback as before
+      .exec();
   }
 
   // Get a claim by its ID and validate ownership
