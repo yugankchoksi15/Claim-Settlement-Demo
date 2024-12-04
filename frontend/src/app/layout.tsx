@@ -1,38 +1,41 @@
 "use client";
 import * as React from "react";
 import Head from "next/head";
-
 import "@/styles/globals.css";
 import "@/styles/colors.css";
-
-import { siteConfig } from "@/constant/config";
+import { defaultMetadata } from "@/constant/metadata"; // Import the metadata
 import Header from "./components/Header/Header";
 import Footer from "./components/footer/footer";
-
-// Server-side metadata export (no 'use client' directive here)
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
- 
-  const token = localStorage.getItem("token");
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // Set `isLoggedIn` to true if token exists
+  }, []); // Run only once on mount
 
   return (
     <html>
-      <body>
+      <body className="min-h-screen flex flex-col">
         <Head>
-          <title>Default Title</title>
+          <title>{defaultMetadata.title}</title> {/* Use the title from the metadata */}
+          <meta name="description" content={defaultMetadata.description} />
+          <meta name="keywords" content={defaultMetadata.keywords} />
+          <meta name="author" content={defaultMetadata.author} />
         </Head>
-        {token ? (
+        {isLoggedIn ? (
           <>
             <Header />
-            {children}
+            <main className="flex-grow">{children}</main>
             <Footer />
           </>
         ) : (
-          <>{children}</>
+          <main className="flex-grow">{children}</main>
         )}
       </body>
     </html>
