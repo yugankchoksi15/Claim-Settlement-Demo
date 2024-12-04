@@ -4,9 +4,18 @@ import { FaBuilding, FaCity, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 
 export default function RepairCenter({
   handleRepairCenterChange,
-  repairCenters,
   selectedRepairCenter,
+  errors,
+  touched,
+  repaireCenter,
+  setFieldValue, // Pass setFieldValue from Formik props
 }: any) {
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = event.target.value;
+    setFieldValue("repairCenter", selectedId); // Update Formik's state
+    handleRepairCenterChange(event); // Call additional handler if needed
+  };
+
   return (
     <>
       <div className="mb-4">
@@ -21,15 +30,20 @@ export default function RepairCenter({
           id="repairCenter"
           name="repairCenter"
           className="w-full border rounded-lg p-2"
-          onChange={handleRepairCenterChange}
+          onChange={handleChange} // Use the modified handleChange
         >
           <option value="">Select a repair center</option>
-          {repairCenters.map((center: any) => (
-            <option key={center.id} value={center.id}>
+          {repaireCenter?.map((center: any) => (
+            <option key={center._id} value={center._id}>
               {center.name} - {center.city}
             </option>
           ))}
         </Field>
+
+        {/* Display error message */}
+        {errors.repairCenter && touched.repairCenter && (
+          <div className="text-sm text-red-600 mt-1">{errors.repairCenter}</div>
+        )}
       </div>
 
       {selectedRepairCenter && (
@@ -51,7 +65,7 @@ export default function RepairCenter({
             </div>
             <div className="flex items-center">
               <FaPhone className="text-blue-500 mr-3" />
-              <p className="text-gray-700">{selectedRepairCenter.contact}</p>
+              <p className="text-gray-700">{selectedRepairCenter.contactNumber}</p>
             </div>
           </div>
         </div>
@@ -59,4 +73,3 @@ export default function RepairCenter({
     </>
   );
 }
-  

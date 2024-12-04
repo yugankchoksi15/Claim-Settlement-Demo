@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Field, Form } from "formik";
+import * as Yup from "yup";
 import { FaMapMarkerAlt, FaPhone, FaCity, FaBuilding } from "react-icons/fa";
 import ClaimInfo from "../Step1/ClaimInfo";
 import UploadDocument from "../Step2/UploadDocument";
 import RepairCenter from "../Step3/RepairCenter";
+import { createClaim, getRepairecenterApi } from "@/app/api/ApiConfig/api";
+import SmallLoadingSpinner from "../loader";
 
 export default function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -13,89 +16,47 @@ export default function Header() {
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [selectedRepairCenter, setSelectedRepairCenter] = useState<any>(null);
+  const [repaireCenter, setRepaireCenter] = useState<any>([]);
+  const [loading, setloading] = useState(false);
+  const getRepaireCenterData = async () => {
+    try {
+      const resp = await getRepairecenterApi();
+      setRepaireCenter(resp);
+    } catch (error) {
+      console.error("Error fetching repair center data:", error); // Log the error
+    }
+  };
 
-  // Sample repair centers
-  const repairCenters = [
-    {
-      id: 1,
-      name: "Repair Center 1",
-      city: "New York",
-      address: "123 Main St",
-      contact: "123-456-7890",
-    },
-    {
-      id: 2,
-      name: "Repair Center 2",
-      city: "Los Angeles",
-      address: "456 Elm St",
-      contact: "987-654-3210",
-    },
-    {
-      id: 3,
-      name: "Repair Center 1",
-      city: "New York",
-      address: "123 Main St",
-      contact: "123-456-7890",
-    },
-    {
-      id: 4,
-      name: "Repair Center 2",
-      city: "Los Angeles",
-      address: "456 Elm St",
-      contact: "987-654-3210",
-    },
-    {
-      id: 5,
-      name: "Repair Center 1",
-      city: "New York",
-      address: "123 Main St",
-      contact: "123-456-7890",
-    },
-    {
-      id: 6,
-      name: "Repair Center 2",
-      city: "Los Angeles",
-      address: "456 Elm St",
-      contact: "987-654-3210",
-    },
-    {
-      id: 7,
-      name: "Repair Center 1",
-      city: "New York",
-      address: "123 Main St",
-      contact: "123-456-7890",
-    },
-    {
-      id: 8,
-      name: "Repair Center 2",
-      city: "Los Angeles",
-      address: "456 Elm St",
-      contact: "987-654-3210",
-    },
-    {
-      id: 9,
-      name: "Repair Center 1",
-      city: "New York",
-      address: "123 Main St",
-      contact: "123-456-7890",
-    },
-    {
-      id: 10,
-      name: "Repair Center 2",
-      city: "Los Angeles",
-      address: "456 Elm St",
-      contact: "987-654-3210",
-    },
-  ];
+  useEffect(() => {
+    if (isDialogOpen) {
+      getRepaireCenterData();
+    }
+  }, [isDialogOpen]);
 
+  const handleSubmitClaim = async (values: any) => {
+    console.log('valuesvaluesvaluesvalues', values)
+    setloading(true)
+    try {
+      const resp = await createClaim(values); // Make API call
+      setloading(false)
+      location.reload()
+      console.log("resprespresp",resp); // Handle the successful response here (e.g., redirect, show success message)
+    } catch (error: any) {
+        setloading(false)
+      console.error("Error submitting claim:", error.message || error); // Log the error message
+      // Optionally: Handle the error (e.g., show an error message to the user)
+    }
+  };
+  
   const handleRepairCenterChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedId = event.target.value;
     if (selectedId) {
-      const selectedCenter = repairCenters.find(
-        (center) => center.id === parseInt(selectedId)
+      const selectedCenter = repaireCenter?.find(
+        (center:any) => center._id === selectedId
       );
+      console.log('selectedCenter', selectedCenter)
       setSelectedRepairCenter(selectedCenter);
     } else {
       setSelectedRepairCenter(null);
@@ -125,9 +86,35 @@ export default function Header() {
     setFileNames(updatedFiles.map((file) => file.name));
   };
 
-  const nextStep = () => currentStep == 3 ? null : setCurrentStep((prev) => prev + 1);
-  const prevStep = () => currentStep == 1 ? null : setCurrentStep((prev) => prev - 1);
-  console.log('currentStep', currentStep)
+  const nextStep = () => {
+    if (currentStep < 3) {
+      setCurrentStep((prev) => prev + 1); // Proceed to the next step
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep((prev) => prev - 1); // Go back to the previous step
+    }
+  };
+
+  // Define validation schemas for different steps
+  const getValidationSchema = (currentStep: any) => {
+    if (currentStep === 3) {
+      return Yup.object({
+        repairCenter: Yup.string().required("Please select a repair center"),
+      });
+    }
+
+    return Yup.object({
+      issueDescription: Yup.string().required("Issue Description is required"),
+      company: Yup.string().required("Company is required"),
+      model: Yup.string().required("Model is required"),
+      yearOfManufacturing: Yup.date().required("Manufacturing year is required").nullable(),
+      vehicleNumber: Yup.string().required("Vehicle number is required"),
+    });
+  };
+
   return (
     <>
       <header>
@@ -211,27 +198,31 @@ export default function Header() {
               </div>
 
               {/* Step 1 - Claim Info and Vehicle Info */}
-
               <Formik
                 initialValues={{
                   issueDescription: "",
                   company: "",
                   model: "",
-                  year: "",
+                  yearOfManufacturing: "",
                   vehicleNumber: "",
-                  documents: null,
-                  repairCenter: "",
+                  documents: [], // Add documents field here
+                  repairCenter:"",
                 }}
-                onSubmit={(values, setSubmitting: any) => {
-                  console.log(values);
-
+                validationSchema={getValidationSchema(currentStep)} // Dynamically get validation schema
+                onSubmit={(values, { setSubmitting }) => {
+                  console.log("valuesvaluesvaluesvalues", values);
+                  nextStep(); // Proceed to next step
                 }}
               >
-                {({ setFieldValue, handleSubmit, setSubmitting }) => (
+                {({values, setFieldValue, handleSubmit, errors, touched }) => (
                   <Form onSubmit={handleSubmit}>
                     {currentStep === 1 && (
                       <div className="mb-4 flex space-x-8">
-                        <ClaimInfo issueDescriptionName="issueDescription" />
+                        <ClaimInfo
+                          issueDescriptionName="issueDescription"
+                          errors={errors}
+                          touched={touched}
+                        />
                       </div>
                     )}
 
@@ -241,21 +232,28 @@ export default function Header() {
                         handleFileChange={handleFileChange}
                         files={files}
                         removeFile={removeFile}
+                        errors={errors}
+                        touched={touched}
                       />
                     )}
 
                     {currentStep === 3 && (
                       <RepairCenter
                         handleRepairCenterChange={handleRepairCenterChange}
-                        repairCenters={repairCenters}
                         selectedRepairCenter={selectedRepairCenter}
+                        errors={errors}
+                        touched={touched}
+                        repaireCenter={repaireCenter}
+                        setFieldValue={setFieldValue}
                       />
                     )}
 
                     <div className="p-4 border-t flex justify-between">
+                      {/* Back button */}
                       <button
+                        type="button"
                         onClick={prevStep}
-                        disabled={currentStep === 1}
+                        disabled={currentStep === 1} // Disable when on the first step
                         className={`px-4 py-2 rounded-lg ${
                           currentStep === 1
                             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -264,17 +262,19 @@ export default function Header() {
                       >
                         Back
                       </button>
+
+                      {/* Next/Submit button */}
                       {currentStep === 3 ? (
                         <button
                           type="submit"
                           className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                          onClick={() => handleSubmitClaim(values)}
                         >
-                          Submit
+                            {loading ? <SmallLoadingSpinner /> : "Submit"}
                         </button>
                       ) : (
                         <button
-                          onClick={nextStep}
-                          disabled={currentStep === 3}
+                          type="submit"
                           className={`px-4 py-2 rounded-lg ${
                             currentStep === 3
                               ? "bg-gray-300 text-gray-500 cursor-not-allowed"

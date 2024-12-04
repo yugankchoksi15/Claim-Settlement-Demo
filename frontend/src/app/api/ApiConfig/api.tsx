@@ -59,3 +59,34 @@ export const getClaimAPI = async () => {
     }
   }
 };
+
+export const createClaim = async (data:any) => {
+  try {
+ 
+    const response = await api.post("/claim", data);
+
+    return response.data; // Return the data from the API response
+  } catch (error:any) {
+    // Handle and throw the error
+    if (error.response) {
+      throw new Error(error.response.data.message || "Claim creation failed");
+    } else {
+      throw new Error("Network error or server unavailable");
+    }
+  }
+};
+
+export const getRepairecenterApi = async () => {
+  try {
+    const response = await api.get("/repair-centers");
+    return response.data; // Return the data from the API response
+  } catch (error: any) {
+    // Handle and throw the error
+    if (error.response) {
+      throw new Error(error.response.data.message || "get claim failed");
+    } else {
+      throw new Error("Network error or server unavailable");
+    }
+  }
+};
+

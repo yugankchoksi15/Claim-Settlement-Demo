@@ -1,6 +1,13 @@
 import React from "react";
 
-export default function UploadDocument({handleFileChange, setFieldValue, files, removeFile} :any) {
+export default function UploadDocument({
+  handleFileChange,
+  setFieldValue,
+  files,
+  removeFile,
+  errors,
+  touched
+}: any) {
   return (
     <>
       <div className="mb-4">
@@ -31,7 +38,6 @@ export default function UploadDocument({handleFileChange, setFieldValue, files, 
                 setFieldValue("documents", event.target.files);
               }}
               className="absolute inset-0 w-full h-full p-0 m-0 opacity-0 cursor-pointer"
-              multiple
             />
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <svg
@@ -55,7 +61,7 @@ export default function UploadDocument({handleFileChange, setFieldValue, files, 
           {/* Display the selected files */}
           {files.length > 0 && (
             <div className="grid grid-cols-2 gap-4 mt-4 md:grid-cols-6">
-              {files.map((file:any, index:any) => (
+              {files.map((file: any, index: any) => (
                 <div
                   key={index}
                   className="relative flex flex-col items-center overflow-hidden text-center bg-gray-100 border rounded cursor-move select-none"
@@ -112,6 +118,9 @@ export default function UploadDocument({handleFileChange, setFieldValue, files, 
             </div>
           )}
         </div>
+        {errors.documents && touched.documents && (
+          <div className="text-red-500 text-sm mt-2">{errors.documents}</div>
+        )}
       </div>
     </>
   );

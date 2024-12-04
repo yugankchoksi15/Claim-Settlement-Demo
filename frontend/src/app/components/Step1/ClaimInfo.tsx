@@ -1,8 +1,9 @@
-// ClaimInfo.jsx
 import React from "react";
 import { Field } from "formik";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-const ClaimInfo = ({ issueDescriptionName }: any) => {
+const ClaimInfo = ({ issueDescriptionName, errors, touched }: any) => {
   return (
     <>
       <div className="w-1/2">
@@ -22,6 +23,11 @@ const ClaimInfo = ({ issueDescriptionName }: any) => {
             className="w-full border rounded-lg p-2"
             rows="13"
           />
+          {errors.issueDescription && touched.issueDescription && (
+            <div className="text-red-500 text-sm">
+              {errors.issueDescription}
+            </div>
+          )}
         </div>
       </div>
       <div className="w-1/2">
@@ -41,6 +47,9 @@ const ClaimInfo = ({ issueDescriptionName }: any) => {
             placeholder="Enter company name"
             className="w-full border rounded-lg p-2"
           />
+          {errors.company && touched.company && (
+            <div className="text-red-500 text-sm">{errors.company}</div>
+          )}
         </div>
 
         <div className="mb-4">
@@ -57,6 +66,9 @@ const ClaimInfo = ({ issueDescriptionName }: any) => {
             placeholder="Enter model"
             className="w-full border rounded-lg p-2"
           />
+          {errors.model && touched.model && (
+            <div className="text-red-500 text-sm">{errors.model}</div>
+          )}
         </div>
 
         <div className="mb-4">
@@ -67,12 +79,33 @@ const ClaimInfo = ({ issueDescriptionName }: any) => {
             Year of Manufacturing
           </label>
           <Field
-            type="date"
-            id="year"
-            name="year"
-            placeholder="Enter manufacturing year"
+            name="yearOfManufacturing"
             className="w-full border rounded-lg p-2"
+            render={({ field, form }: any) => (
+              <DatePicker
+                {...field}
+                selected={
+                  field.value ? new Date(field.value, 0) : null // Convert year to Date object
+                }
+                onChange={(date) =>
+                  form.setFieldValue(
+                    "yearOfManufacturing",
+                    date ? date.getFullYear() : ""
+                  )
+                }
+                showYearPicker
+                dateFormat="yyyy"
+                placeholderText="Enter manufacturing year"
+                className="w-full border rounded-lg p-2"
+              />
+            )}
           />
+
+          {errors.yearOfManufacturing && touched.yearOfManufacturing && (
+            <div className="text-red-500 text-sm">
+              {errors.yearOfManufacturing}
+            </div>
+          )}
         </div>
 
         <div className="mb-4">
@@ -89,6 +122,9 @@ const ClaimInfo = ({ issueDescriptionName }: any) => {
             placeholder="Enter vehicle number"
             className="w-full border rounded-lg p-2"
           />
+          {errors.vehicleNumber && touched.vehicleNumber && (
+            <div className="text-red-500 text-sm">{errors.vehicleNumber}</div>
+          )}
         </div>
       </div>
     </>
