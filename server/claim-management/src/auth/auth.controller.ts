@@ -11,7 +11,7 @@ export class AuthController {
   @Post('register')
   @ApiBody({ type: RegisterDto })
   async register(@Body() registerDto: RegisterDto) {
-    const {firstName, lastName, email, password} = registerDto
+    const {firstName, lastName, email, password } = registerDto
     return this.authService.register(firstName, lastName, email, password);
   }
 

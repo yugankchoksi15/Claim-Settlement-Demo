@@ -1,33 +1,55 @@
-// src/claims/claims.service.ts
-
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Claim, ClaimDocument } from './claim.schema';
-// import { Claim, ClaimDocument } from './schemas/claim.schema';
+import { Claim, ClaimDocument, ClaimStatus } from './claim.schema';
 
 @Injectable()
-export class ClaimsService {
-  constructor(@InjectModel(Claim.name) private claimModel: Model<ClaimDocument>) {}
+export class ClaimService {
+  constructor(@InjectModel('Claim') private readonly claimModel: Model<ClaimDocument>) {}
 
-  async createClaim(userId: string, vehicleInfo: string): Promise<Claim> {
-    const claim = new this.claimModel({ userId, vehicleInfo, status: 'submitted', submissionDate: new Date() });
-    return claim.save();
+  // Create a new claim
+  async createClaim(claimDto: Partial<Claim>): Promise<Claim> {
+    const newClaim = new this.claimModel({
+      ...claimDto,
+      submissionDate: new Date(),
+    });
+    return newClaim.save();
   }
 
-  async getClaimStatus(claimId: string): Promise<Claim | null> {
-    return this.claimModel.findById(claimId);
+  // Get all claims by a specific user
+  async getClaimsByUser(userId: string): Promise<Claim[]> {
+    return this.claimModel.find({ userId }).exec();
   }
 
-  async updateClaimStatus(claimId: string, status: string): Promise<Claim | null> {
-    return this.claimModel.findByIdAndUpdate(claimId, { status }, { new: true });
+  // Get a claim by its ID and validate ownership
+  async getClaimByIdForUser(id: string, userId: string): Promise<Claim> {
+    const claim = await this.claimModel.findOne({ _id: id, userId }).exec();
+    if (!claim) {
+      throw new NotFoundException(`Claim with ID "${id}" not found or access denied`);
+    }
+    return claim;
   }
 
-  async cancelClaim(claimId: string): Promise<Claim | null> {
-    return this.claimModel.findByIdAndDelete(claimId);
+  // Update a claim's status or details and validate ownership
+  async updateClaimForUser(id: string, userId: string, updateDto: Partial<Claim>): Promise<Claim> {
+    const claim = await this.claimModel.findOneAndUpdate({ _id: id, userId }, updateDto, { new: true }).exec();
+    if (!claim) {
+      throw new NotFoundException(`Claim with ID "${id}" not found or access denied`);
+    }
+    return claim;
   }
 
-  async provideFeedback(claimId: string, feedback: string): Promise<Claim | null> {
-    return this.claimModel.findByIdAndUpdate(claimId, { feedback }, { new: true });
+  // Cancel a claim (only if it belongs to the user)
+  async cancelClaimForUser(id: string, userId: string): Promise<Claim> {
+    return this.updateClaimForUser(id, userId, { status: ClaimStatus.CANCELED });
+  }
+
+  // Appeal a rejected claim (only if it belongs to the user)
+  async appealClaimForUser(id: string, userId: string): Promise<Claim> {
+    const claim = await this.getClaimByIdForUser(id, userId);
+    if (claim.status !== ClaimStatus.REJECTED) {
+      throw new ForbiddenException('Only rejected claims can be appealed');
+    }
+    return this.updateClaimForUser(id, userId, { status: ClaimStatus.APPEALED });
   }
 }

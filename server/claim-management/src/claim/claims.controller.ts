@@ -1,34 +1,62 @@
-// src/claims/claims.controller.ts
-
-import { Controller, Post, Get, Param, Body, Delete, Put } from '@nestjs/common';
-import { ClaimsService } from './claims.service';
+import { Controller, Get, Post, Put, Body, Param, Patch, Req, UseGuards } from '@nestjs/common';
+import { Claim, ClaimStatus } from './claim.schema';
+import { ClaimService } from './claims.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Adjust the path as needed
 
 @Controller('claims')
-export class ClaimsController {
-  constructor(private claimsService: ClaimsService) {}
+// @UseGuards(JwtAuthGuard) // Protect all routes in this controller
+export class ClaimController {
+  constructor(private readonly claimService: ClaimService) {
+  console.log("my claim controller =============> ")
 
-  @Post('create')
-  async createClaim(@Body('userId') userId: string, @Body('vehicleInfo') vehicleInfo: string) {
-    return this.claimsService.createClaim(userId, vehicleInfo);
   }
 
-  @Get(':claimId')
-  async getClaimStatus(@Param('claimId') claimId: string) {
-    return this.claimsService.getClaimStatus(claimId);
+  // Create a new claim
+  @Post()
+  async createClaim(@Body() claimDto: Partial<Claim>, @Req() req: any): Promise<Claim> {
+    // const userId = req.user.id; // Extract user ID from token
+    const userId = "674ff4feb35927cd75734ace"; // Extract user ID from token
+    return this.claimService.createClaim({ ...claimDto, userId });
   }
 
-  @Put(':claimId')
-  async updateClaimStatus(@Param('claimId') claimId: string, @Body('status') status: string) {
-    return this.claimsService.updateClaimStatus(claimId, status);
+  // Get all claims for the authenticated user
+  @Get()
+  async getClaimsForUser(@Req() req: any): Promise<Claim[]> {
+    console.log("in the get claim ============> ")
+    // const userId = req.user.id;
+    const userId = "674ff4feb35927cd75734ace"; // Extract user ID from token
+     // Extract user ID from token
+    console.log("userId ==========> ", userId)
+    return this.claimService.getClaimsByUser(userId);
   }
 
-  @Delete(':claimId')
-  async cancelClaim(@Param('claimId') claimId: string) {
-    return this.claimsService.cancelClaim(claimId);
+  // Get a specific claim by its ID (only if it belongs to the user)
+  @Get(':id')
+  async getClaimById(@Param('id') id: string, @Req() req: any): Promise<Claim> {
+    const userId = req.user.id; // Extract user ID from token
+    return this.claimService.getClaimByIdForUser(id, userId);
   }
 
-  @Put('feedback/:claimId')
-  async provideFeedback(@Param('claimId') claimId: string, @Body('feedback') feedback: string) {
-    return this.claimsService.provideFeedback(claimId, feedback);
+  // Update a claim (e.g., status or details, only if it belongs to the user)
+  @Put(':id')
+  async updateClaim(@Param('id') id: string, @Body() updateDto: Partial<Claim>, @Req() req: any): Promise<Claim> {
+    // const userId = req.user.id; // Extract user ID from token
+    const userId = "674ff4feb35927cd75734ace"; // Extract user ID from token
+    return this.claimService.updateClaimForUser(id, userId, updateDto);
+  }
+
+  // Cancel a claim (only if it belongs to the user)
+  @Patch(':id/cancel')
+  async cancelClaim(@Param('id') id: string, @Req() req: any): Promise<Claim> {
+    // const userId = req.user.id; // Extract user ID from token
+    const userId = "674ff4feb35927cd75734ace"; // Extract user ID from token
+    return this.claimService.cancelClaimForUser(id, userId);
+  }
+
+  // Appeal a rejected claim (only if it belongs to the user)
+  @Patch(':id/appeal')
+  async appealClaim(@Param('id') id: string, @Req() req: any): Promise<Claim> {
+    const userId = req.user.id; // Extract user ID from token
+    return this.claimService.appealClaimForUser(id, userId);
   }
 }

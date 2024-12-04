@@ -21,6 +21,9 @@ export class RegisterDto {
     @MinLength(6)
     @ApiProperty({ example: 'password123', description: 'The password for the account' })
     password: string;
+
+    @IsString()
+    role: string;
 }
 
 export class LoginDto {

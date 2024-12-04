@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Claim, ClaimSchema } from './claim.schema';
+import { JwtModule } from '@nestjs/jwt';
 import { ClaimController } from './claims.controller';
 import { ClaimService } from './claims.service';
-import { JwtModule } from '@nestjs/jwt';
-// import { ClaimService } from './claim.service';
-// import { ClaimController } from './claim.controller';
 
 @Module({
   imports: [

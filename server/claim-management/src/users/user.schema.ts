@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 // export type UserDocument = User & Document;
 export type UserDocument = User & Document & { comparePassword: (candidatePassword: string) => Promise<boolean> };
 
+export type UserRole = 'customer' | 'admin' | 'super-admin';
 
 @Schema({ timestamps: true })
 export class User {
@@ -24,6 +25,13 @@ export class User {
 
   @Prop({ default: [] })
   claims: string[]; // Array of Claim IDs
+
+  @Prop({ 
+    type: String, 
+    enum: ['customer', 'admin', 'super-admin'], 
+    default: 'customer' 
+  })
+  role: UserRole;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

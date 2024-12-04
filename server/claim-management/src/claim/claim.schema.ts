@@ -1,29 +1,51 @@
-// src/claims/schemas/claim.schema.ts
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 export type ClaimDocument = Claim & Document;
 
+export enum ClaimStatus {
+  PENDING = 'Pending',
+  ACCEPTED = 'Accepted',
+  REJECTED = 'Rejected',
+  APPEALED = 'Appealed',
+  CANCELED = 'Canceled',
+  REPAIRED = 'Repaired',
+}
+
 @Schema({ timestamps: true })
 export class Claim {
   @Prop({ required: true })
-  userId: string; // Refers to the user who made the claim
+  userId: string; // Reference to the User
 
   @Prop({ required: true })
-  vehicleInfo: string; // Vehicle details
+  model: string; // Vehicle model
 
   @Prop({ required: true })
-  status: string; // Claim status
+  company: string; // Vehicle company
 
   @Prop({ required: true })
-  submissionDate: Date;
+  yearOfManufacturing: number; // Year of manufacturing
+
+  @Prop({ required: true })
+  vehicleNumber: string; // Vehicle registration number
+
+  @Prop({ default: ClaimStatus.PENDING })
+  status: ClaimStatus;
+
+  @Prop({ required: true })
+  issueDescription: string;
 
   @Prop({ default: null })
-  repairCentre: string | null; // Assigned repair centre
+  repairCenter: string | null; // Selected repair center ID
 
-  @Prop({ default: '' })
-  feedback: string; // User feedback
+  @Prop({ default: [] })
+  documents: string[]; // Array of file paths or URLs for claim/policy documents
+
+  @Prop({ default: null })
+  feedback: string | null; // Feedback from user
+
+  @Prop({ default: null })
+  submissionDate: Date;
 }
 
 export const ClaimSchema = SchemaFactory.createForClass(Claim);
