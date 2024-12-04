@@ -9,6 +9,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Claim settlement Demo APIs')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
     
   const document = SwaggerModule.createDocument(app, config);
@@ -19,7 +20,7 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
     credentials: true, // Allow cookies if needed
   });
-  
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
