@@ -1,9 +1,9 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './auth.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -11,7 +11,7 @@ export class AuthController {
   @Post('register')
   @ApiBody({ type: RegisterDto })
   async register(@Body() registerDto: RegisterDto) {
-    const {firstName, lastName, email, password} = registerDto
+    const {firstName, lastName, email, password } = registerDto
     return this.authService.register(firstName, lastName, email, password);
   }
 

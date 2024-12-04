@@ -14,9 +14,29 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(firstName: string, lastName: string, email: string, password: string): Promise<User> {
-    const user = new this.userModel({ firstName, lastName, email, password });
-    return user.save();
+  async register(firstName: string, lastName: string, email: string, password: string): Promise<{ user: User; token: string }> {
+    // const user = new this.userModel({ firstName, lastName, email, password });
+    // return user.save();
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user instance
+    const user = new this.userModel({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    });
+  
+    // Save the user to the database
+    const savedUser = await user.save();
+  
+    // Generate a JWT token for the newly registered user
+    const payload = { email: savedUser.email, user_id: savedUser._id };
+    const token = this.jwtService.sign(payload, { expiresIn: '1h' });
+  
+    // Return the user and token
+    return { user: savedUser, token };
   }
 
   async login(email: string, password: string): Promise<string> {
@@ -32,8 +52,9 @@ export class AuthService {
     if (!isPasswordValid) throw new Error('Invalid credentials');
 
     // Generate a JWT token for the user
-    const payload = { email: user.email, sub: user._id };
-    return this.jwtService.sign(payload);
+    const payload = { email: user.email, user_id: user._id };
+    const token = this.jwtService.sign(payload, { expiresIn: '1h' });
+    return token;
   }
 
   // validateUser method is another way to validate credentials
