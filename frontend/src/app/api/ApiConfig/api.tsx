@@ -6,7 +6,7 @@ const api = axios.create({
 
 export const loginAPI = async ({ email, password }: any) => {
   try {
-    const response = await api.post("/login", { email, password });
+    const response = await api.post("/auth/login", { email, password });
     return response.data; // Return the data from the API response
   } catch (error: any) {
     // Handle and throw the error
@@ -21,7 +21,7 @@ export const loginAPI = async ({ email, password }: any) => {
 export const signupApi = async (value: any) => {
   console.log("valuevaluevalue",value)
   try {
-    const response = await api.post("/register", value);
+    const response = await api.post("/auth/register", value);
     return response.data; // Return the data from the API response
   } catch (error: any) {
     // Handle and throw the error
