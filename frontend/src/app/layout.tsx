@@ -1,62 +1,43 @@
-import { Metadata } from 'next';
-import * as React from 'react';
-
-import '@/styles/globals.css';
-// !STARTERCONF This is for demo purposes, remove @/styles/colors.css import immediately
-import '@/styles/colors.css';
-
-import { siteConfig } from '@/constant/config';
-
-// !STARTERCONF Change these default meta
-// !STARTERCONF Look at @/constant/config to change them
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: siteConfig.title,
-    template: `%s | ${siteConfig.title}`,
-  },
-  description: siteConfig.description,
-  robots: { index: true, follow: true },
-  // !STARTERCONF this is the default favicon, you can generate your own from https://realfavicongenerator.net/
-  // ! copy to /favicon folder
-  icons: {
-    icon: '/favicon/favicon.ico',
-    shortcut: '/favicon/favicon-16x16.png',
-    apple: '/favicon/apple-touch-icon.png',
-  },
-  manifest: `/favicon/site.webmanifest`,
-  openGraph: {
-    url: siteConfig.url,
-    title: siteConfig.title,
-    description: siteConfig.description,
-    siteName: siteConfig.title,
-    images: [`${siteConfig.url}/images/og.jpg`],
-    type: 'website',
-    locale: 'en_US',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: siteConfig.title,
-    description: siteConfig.description,
-    images: [`${siteConfig.url}/images/og.jpg`],
-    // creator: '@th_clarence',
-  },
-  // authors: [
-  //   {
-  //     name: 'Theodorus Clarence',
-  //     url: 'https://theodorusclarence.com',
-  //   },
-  // ],
-};
+"use client";
+import * as React from "react";
+import Head from "next/head";
+import "@/styles/globals.css";
+import "@/styles/colors.css";
+import { defaultMetadata } from "@/constant/metadata"; // Import the metadata
+import Header from "./components/Header/Header";
+import Footer from "./components/footer/footer";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // Set `isLoggedIn` to true if token exists
+  }, []); // Run only once on mount
+
   return (
     <html>
-      <body>{children}</body>
+      <body className="min-h-screen flex flex-col">
+        <Head>
+          <title>{defaultMetadata.title}</title> {/* Use the title from the metadata */}
+          <meta name="description" content={defaultMetadata.description} />
+          <meta name="keywords" content={defaultMetadata.keywords} />
+          <meta name="author" content={defaultMetadata.author} />
+        </Head>
+        {isLoggedIn ? (
+          <>
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </>
+        ) : (
+          <main className="flex-grow">{children}</main>
+        )}
+      </body>
     </html>
   );
 }
