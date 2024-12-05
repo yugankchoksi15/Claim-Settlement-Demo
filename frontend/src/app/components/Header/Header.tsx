@@ -136,12 +136,6 @@ export default function Header() {
 
   // Define validation schemas for different steps
   const getValidationSchema = (currentStep: any) => {
-    if (currentStep === 2) {
-      return Yup.object({
-        
-      });
-    }
-
     return Yup.object({
       issueDescription: Yup.string().required("Issue Description is required"),
       company: Yup.string().required("Company is required"),
