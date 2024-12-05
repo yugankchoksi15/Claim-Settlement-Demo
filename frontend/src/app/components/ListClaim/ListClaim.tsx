@@ -3,11 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { getClaimAPI } from "@/app/api/ApiConfig/api";
 import Pagination from "../pagination";
+import { useSelector } from 'react-redux';
+
 
 export default function ListClaim() {
   const [claimData, setClaimData] = useState([]);
   const [page, setPage] = useState(1);
   const [claimTotal, setCliamTotal] = useState(0);
+
+  const count = useSelector((state: any) => state.counter.value);
 
   const getClaimData = async () => {
     try {
@@ -21,7 +25,7 @@ export default function ListClaim() {
 
   useEffect(() => {
     getClaimData();
-  }, [page]);
+  }, [page, count]);
 
   const handlePageNext = () => {
     setPage((prev) => prev + 1);
@@ -38,6 +42,7 @@ export default function ListClaim() {
       {claimData.length ? (
         <>
           {" "}
+          <div className="mt-5 h-[70vh]">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -92,7 +97,16 @@ export default function ListClaim() {
               </tbody>
             </table>
           </div>
-          <Pagination page={page} claimTotal={claimTotal} handlePagePrev={handlePagePrev} handlePageNext={handlePageNext}/>
+          </div>
+          <div className="relative">
+            {/* Other Content */}
+            <Pagination
+              page={page}
+              claimTotal={claimTotal}
+              handlePagePrev={handlePagePrev}
+              handlePageNext={handlePageNext}
+            />
+          </div>
         </>
       ) : (
         <>

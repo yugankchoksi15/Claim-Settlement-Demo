@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 
 const Pagination = ({
@@ -7,7 +9,7 @@ const Pagination = ({
   handlePageNext,
 }: any) => {
   return (
-    <div className="flex flex-col items-end mr-6 mt-3">
+    <div className="flex flex-col items-end mr-6 absolute  right-2">
       <span className="text-sm text-gray-700 dark:text-gray-400">
         Showing{" "}
         <span className="font-semibold text-gray-900 dark:text-white">

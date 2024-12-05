@@ -13,9 +13,7 @@ export default function HomePage() {
   return (
     <div>
       {/* <Header /> */}
-      <div className='mt-5'>
       <ListClaim />
-      </div>
     </div>
   );
 }

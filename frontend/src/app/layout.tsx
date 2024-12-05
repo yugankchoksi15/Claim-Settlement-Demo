@@ -6,6 +6,7 @@ import "@/styles/colors.css";
 import { defaultMetadata } from "@/constant/metadata"; // Import the metadata
 import Header from "./components/Header/Header";
 import Footer from "./components/footer/footer";
+import ReduxProvider from "./redux/provider";
 
 export default function RootLayout({
   children,
@@ -23,16 +24,19 @@ export default function RootLayout({
     <html>
       <body className="min-h-screen flex flex-col">
         <Head>
-          <title>{defaultMetadata.title}</title> {/* Use the title from the metadata */}
+          <title>{defaultMetadata.title}</title>{" "}
+          {/* Use the title from the metadata */}
           <meta name="description" content={defaultMetadata.description} />
           <meta name="keywords" content={defaultMetadata.keywords} />
           <meta name="author" content={defaultMetadata.author} />
         </Head>
         {isLoggedIn ? (
           <>
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
+            <ReduxProvider>
+              <Header />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </ReduxProvider>
           </>
         ) : (
           <main className="flex-grow">{children}</main>

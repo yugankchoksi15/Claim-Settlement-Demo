@@ -9,6 +9,9 @@ import UploadDocument from "../Step2/UploadDocument";
 import RepairCenter from "../Step3/RepairCenter";
 import { createClaim, getRepairecenterApi } from "@/app/api/ApiConfig/api";
 import SmallLoadingSpinner from "../loader";
+import { increment } from '../../redux/slice/counterSlice';
+import { useDispatch } from 'react-redux';
+
 
 export default function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -18,6 +21,10 @@ export default function Header() {
   const [selectedRepairCenter, setSelectedRepairCenter] = useState<any>(null);
   const [repaireCenter, setRepaireCenter] = useState<any>([]);
   const [loading, setloading] = useState(false);
+
+  const dispatch = useDispatch();
+
+
   const getRepaireCenterData = async () => {
     try {
       const resp = await getRepairecenterApi();
@@ -34,12 +41,12 @@ export default function Header() {
   }, [isDialogOpen]);
 
   const handleSubmitClaim = async (values: any) => {
-    console.log('valuesvaluesvaluesvalues', values)
     setloading(true)
     try {
       const resp = await createClaim(values); // Make API call
       setloading(false)
-      location.reload();
+      dispatch(increment())
+      setIsDialogOpen(false)
     } catch (error: any) {
         setloading(false)
       console.error("Error submitting claim:", error.message || error);
