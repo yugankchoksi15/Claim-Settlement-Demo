@@ -22,28 +22,6 @@ export default function ListClaim() {
     string | null
   >(null);
 
-  const initialCount = localStorage.getItem("count")
-    ? parseInt(localStorage.getItem("count")!)
-    : 0;
-  const [count, setCount] = useState<number>(initialCount);
-
-  const getCount = localStorage.getItem("count");
-
-  useEffect(() => {
-    // Listen for changes in localStorage across tabs
-    const handleStorageChange = () => {
-      const updatedCount: any = localStorage.getItem("count");
-      setCount(parseInt(updatedCount));
-    };
-
-    // Attach event listener
-    window.addEventListener("storage", handleStorageChange);
-
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
 
   const getClaimData = async () => {
     try {
@@ -57,7 +35,7 @@ export default function ListClaim() {
 
   useEffect(() => {
     getClaimData();
-  }, [page, count]);
+  }, [page]);
 
   const handlePageNext = () => {
     setPage((prev) => prev + 1);

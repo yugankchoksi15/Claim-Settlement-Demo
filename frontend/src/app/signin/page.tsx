@@ -41,10 +41,6 @@ const SignUpPage = () => {
         localStorage.setItem("token", resp);
         router.push("/");
         setloading(false);
-
-        setTimeout(() => {
-          location.reload();
-        }, 100);
       }
       console.log("Login successful:", resp);
     } catch (error) {
