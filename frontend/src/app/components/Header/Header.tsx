@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { FaMapMarkerAlt, FaPhone, FaCity, FaBuilding } from "react-icons/fa";
@@ -19,6 +19,26 @@ export default function Header() {
   const [repaireCenter, setRepaireCenter] = useState<any>([]);
   const [loading, setloading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement>(null); // Type here
+
+  const handleClickOutside = (event:any) => {
+    // Check if the click is outside of the dropdown element
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false); // Close dropdown if the click is outside
+    }
+  };
+
+  useEffect(() => {
+    // Add the event listener when the component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []); 
+
 
   // Function to toggle the dropdown
   const toggleDropdown = () => {
@@ -156,7 +176,7 @@ export default function Header() {
 
                 {/* Dropdown Menu */}
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg border w-48 z-50">
+                  <div  ref={dropdownRef} className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg border w-48 z-50">
                     <ul className="py-2">
                       <li>
                         <button
