@@ -42,14 +42,6 @@ export class CreateClaimDto {
   @IsNotEmpty()
   @IsString()
   issueDescription: string;
-
-  @ApiProperty({
-    description: 'Id of the repair center',
-    example: '7mip6526y446l4m@m42',
-  })
-  @IsNotEmpty()
-  @IsString()
-  repairCenter: string;
 }
 
 export class ClaimAppealDto {
