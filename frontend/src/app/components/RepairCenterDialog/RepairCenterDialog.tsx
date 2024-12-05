@@ -1,5 +1,12 @@
+import { claimAppealApi, getRepairecenterApi } from "@/app/api/ApiConfig/api";
 import React, { useState, useEffect } from "react";
-import { FaTimes, FaBuilding, FaCity, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
+import {
+  FaTimes,
+  FaBuilding,
+  FaCity,
+  FaMapMarkerAlt,
+  FaPhone,
+} from "react-icons/fa";
 
 interface RepairCenterDialogProps {
   isOpen: boolean;
@@ -7,31 +14,59 @@ interface RepairCenterDialogProps {
   claimId: string | null;
 }
 
-const RepairCenterDialog: React.FC<RepairCenterDialogProps> = ({ isOpen, onClose, claimId }) => {
-  const [repairCenters, setRepairCenters] = useState<any[]>([]);
+const RepairCenterDialog: React.FC<RepairCenterDialogProps> = ({
+  isOpen,
+  onClose,
+  claimId,
+}) => {
+  const [repairCenters, setRepairCenters] = useState([]);
   const [selectedRepairCenter, setSelectedRepairCenter] = useState<any>(null);
 
-  // Fetch repair centers (assuming an API endpoint exists)
-  const getRepairCenters = async () => {
+  const getRepaireCenterData = async () => {
     try {
-      const response = await fetch("/api/repairCenters");
-      const data = await response.json();
-      setRepairCenters(data);
+      const resp = await getRepairecenterApi();
+      setRepairCenters(resp);
     } catch (error) {
-      console.error("Error fetching repair centers:", error);
+      console.error("Error fetching repair center data:", error); // Log the error
     }
   };
 
   useEffect(() => {
     if (isOpen) {
-      getRepairCenters();
+      getRepaireCenterData();
     }
   }, [isOpen]);
 
-  const handleSelectRepairCenter = (repairCenterId: string) => {
-    const selectedCenter = repairCenters.find((center) => center._id === repairCenterId);
-    setSelectedRepairCenter(selectedCenter);
+  const handleRepairCenterChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedId = event.target.value;
+    if (selectedId) {
+      const selectedCenter: any = repairCenters?.find(
+        (center: any) => center._id === selectedId
+      );
+      setSelectedRepairCenter(selectedCenter);
+    } else {
+      setSelectedRepairCenter(null);
+    }
   };
+
+  const handleClaimAppeal = async () => {
+    try {
+      const param = {
+        status: "Appealed",
+        repairCenter: selectedRepairCenter._id,
+      };
+  
+      // Make the API call
+      const resp = await claimAppealApi(claimId, param);
+      onClose()
+      
+    } catch (error) {
+      console.error('Error while appealing claim:', error);
+    }
+  };
+  
 
   return (
     <div
@@ -49,11 +84,11 @@ const RepairCenterDialog: React.FC<RepairCenterDialogProps> = ({ isOpen, onClose
 
         <div className="mb-4">
           <select
-            onChange={(e) => handleSelectRepairCenter(e.target.value)}
+            onChange={(e) => handleRepairCenterChange(e)} // Pass the full event object
             className="w-full border rounded-lg p-2"
           >
             <option value="">Select a repair center</option>
-            {repairCenters.map((center) => (
+            {repairCenters.map((center: any) => (
               <option key={center._id} value={center._id}>
                 {center.name} - {center.city}
               </option>
@@ -84,10 +119,10 @@ const RepairCenterDialog: React.FC<RepairCenterDialogProps> = ({ isOpen, onClose
 
         <div className="mt-6 flex justify-end">
           <button
-            onClick={onClose}
+            onClick={handleClaimAppeal}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
-            Close
+            Submit
           </button>
         </div>
       </div>

@@ -70,7 +70,6 @@ export default function Header() {
       const selectedCenter = repaireCenter?.find(
         (center: any) => center._id === selectedId
       );
-      console.log("selectedCenter", selectedCenter);
       setSelectedRepairCenter(selectedCenter);
     } else {
       setSelectedRepairCenter(null);

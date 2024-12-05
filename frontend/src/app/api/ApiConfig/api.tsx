@@ -124,4 +124,18 @@ export const AddFeedbackAPI = async ({ claimId, score, comments }: any) => {
   }
 };
 
+export const claimAppealApi = async (claimId: any, value:Object) => {
+  try {
+    const response = await api.put(`claim/appeal/${claimId}`, value);
+    return response.data; // Return the data from the API response
+  } catch (error: any) {
+    // Handle and throw the error
+    if (error.response) {
+      throw new Error(error.response.data.message || "claim appeal submission failed");
+    } else {
+      throw new Error("Network error or server unavailable");
+    }
+  }
+};
+
 
