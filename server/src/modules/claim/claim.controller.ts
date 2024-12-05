@@ -78,7 +78,7 @@ export class ClaimController {
   @Put('/appeal/:id')
   @ApiBody({ type: ClaimAppealDto })
   async AppealClaim(@Param('id') id: string, @Body() update: ClaimAppealDto, @Req() req: any): Promise<Claim> {
-    if (![ClaimStatus.CANCELED, ClaimStatus.APPEALED].includes(update.status)) {
+    if (update.status && ![ClaimStatus.CANCELED, ClaimStatus.APPEALED].includes(update.status)) {
       throw new ForbiddenException('Incorrect Status');
     }
     return this.claimService.updateClaimForUser(id, req.user.id, update);
