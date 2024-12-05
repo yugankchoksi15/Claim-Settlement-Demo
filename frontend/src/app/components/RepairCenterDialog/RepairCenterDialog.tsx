@@ -54,7 +54,7 @@ const RepairCenterDialog: React.FC<RepairCenterDialogProps> = ({
   const handleClaimAppeal = async () => {
     try {
       const param = {
-        status: "Appealed",
+        status: "Accepted",
         repairCenter: selectedRepairCenter._id,
       };
   
