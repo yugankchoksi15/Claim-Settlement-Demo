@@ -46,7 +46,6 @@ const SignUpPage = () => {
           location.reload();
         }, 100);
       }
-      console.log("Login successful:", resp);
     } catch (error) {
       // Handle error (e.g., show a message to the user)
       setloading(false);

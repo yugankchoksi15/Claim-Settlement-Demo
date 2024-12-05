@@ -34,7 +34,6 @@ export default function SignUpPage() {
       // Handle form submission
       setloading(true)
       handleSignUP(values)
-      console.log(values);
     },
   });
 
@@ -48,9 +47,7 @@ export default function SignUpPage() {
         localStorage.setItem("token", token);
         router.push('/')
         setloading(false)
-        // console.log('SignUP successful:', resp);
       }
-      console.log('SignUP successful:', resp);
     } catch (error) {
       // Handle error (e.g., show a message to the user)
       console.error('SignUP failed:', error);

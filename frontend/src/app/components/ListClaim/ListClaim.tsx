@@ -95,14 +95,12 @@ export default function ListClaim() {
     // Implement cancel logic here
     setCancelDialogOpen(true);
     setSelectedClaimForRepair(claimId);
-    console.log(`Cancel claim with ID: ${claimId}`);
   };
 
   const handleAppealClaim = (claimId: string) => {
     // Implement appeal logic here
     setApealDialogOpen(true);
     setSelectedClaimForRepair(claimId);
-    console.log(`Appeal claim with ID: ${claimId}`);
   };
 
   return (

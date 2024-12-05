@@ -123,7 +123,7 @@ export default function Header() {
   };
 
   const nextStep = () => {
-    if (currentStep < 3) {
+    if (currentStep < 2) {
       setCurrentStep((prev) => prev + 1); // Proceed to the next step
     }
   };
@@ -136,9 +136,9 @@ export default function Header() {
 
   // Define validation schemas for different steps
   const getValidationSchema = (currentStep: any) => {
-    if (currentStep === 3) {
+    if (currentStep === 2) {
       return Yup.object({
-        repairCenter: Yup.string().required("Please select a repair center"),
+        
       });
     }
 
@@ -241,7 +241,7 @@ export default function Header() {
                       : "border-gray-300 text-gray-500"
                   }`}
                 >
-                  Step 1
+                  Claim Info
                 </div>
                 <div
                   className={`w-1/3 text-center border-b-2 ${
@@ -250,9 +250,9 @@ export default function Header() {
                       : "border-gray-300 text-gray-500"
                   }`}
                 >
-                  Step 2
+                  Upload Claim Document
                 </div>
-                <div
+                {/* <div
                   className={`w-1/3 text-center border-b-2 ${
                     currentStep >= 3
                       ? "border-blue-500 text-blue-500"
@@ -260,7 +260,7 @@ export default function Header() {
                   }`}
                 >
                   Step 3
-                </div>
+                </div> */}
               </div>
 
               {/* Step 1 - Claim Info and Vehicle Info */}
@@ -272,7 +272,7 @@ export default function Header() {
                   yearOfManufacturing: "",
                   vehicleNumber: "",
                   documents: [], // Add documents field here
-                  repairCenter: "",
+                  repairCenter: "123",
                 }}
                 validationSchema={getValidationSchema(currentStep)} // Dynamically get validation schema
                 onSubmit={(values, { setSubmitting }) => {
@@ -303,7 +303,7 @@ export default function Header() {
                       />
                     )}
 
-                    {currentStep === 3 && (
+                    {/* {currentStep === 3 && (
                       <RepairCenter
                         handleRepairCenterChange={handleRepairCenterChange}
                         selectedRepairCenter={selectedRepairCenter}
@@ -312,7 +312,7 @@ export default function Header() {
                         repaireCenter={repaireCenter}
                         setFieldValue={setFieldValue}
                       />
-                    )}
+                    )} */}
 
                     <div className="p-4 border-t flex justify-between">
                       {/* Back button */}
@@ -330,7 +330,7 @@ export default function Header() {
                       </button>
 
                       {/* Next/Submit button */}
-                      {currentStep === 3 ? (
+                      {currentStep === 2 ? (
                         <button
                           type="submit"
                           className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
@@ -342,7 +342,7 @@ export default function Header() {
                         <button
                           type="submit"
                           className={`px-4 py-2 rounded-lg ${
-                            currentStep === 3
+                            currentStep === 2
                               ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                               : "bg-blue-500 hover:bg-blue-600 text-white"
                           }`}
