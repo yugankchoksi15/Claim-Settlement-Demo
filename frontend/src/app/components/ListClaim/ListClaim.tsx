@@ -131,6 +131,9 @@ export default function ListClaim() {
                       Issue Description
                     </th>
                     <th scope="col" className="px-6 py-3">
+                      View Document
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                       Actions
                     </th>
                   </tr>
@@ -146,6 +149,24 @@ export default function ListClaim() {
                       <td className="px-6 py-4">{claim.vehicleNumber}</td>
                       <td className="px-6 py-4">{claim.yearOfManufacturing}</td>
                       <td className="px-6 py-4">{claim.status}</td>
+                      <td className="px-6 py-4">
+                        <div>
+                          {claim.documents[0] &&
+                            Object.keys(claim.documents[0]).length > 0 ? (
+                            <a
+                              href={`${process.env.NEXT_PUBLIC_API_URL}${claim.documents[0]}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span className="text-yellow-500">View</span>
+                            </a>
+                          ) : (
+                            <span className="text-gray-500">
+
+                            </span>
+                          )}
+                        </div>
+                      </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-4">
                           <div>
