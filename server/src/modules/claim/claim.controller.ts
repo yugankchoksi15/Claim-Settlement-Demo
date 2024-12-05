@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Put, Body, Param, Patch, Req, UseGuards, UploadedFile, UseInterceptors, Query } from '@nestjs/common';
-import { Claim } from './claim.schema';
+import { Controller, Get, Post, Put, Body, Param, Patch, Req, UseGuards, UploadedFile, UseInterceptors, Query, ForbiddenException } from '@nestjs/common';
+import { Claim, ClaimStatus } from './claim.schema';
 import { ClaimService } from './claim.service';
 import { diskStorage } from 'multer';
 import { JwtAuthGuard } from '../../guards/auth.guard'; // Adjust the path as needed
@@ -78,6 +78,9 @@ export class ClaimController {
   @Put('/appeal/:id')
   @ApiBody({ type: ClaimAppealDto })
   async AppealClaim(@Param('id') id: string, @Body() update: ClaimAppealDto, @Req() req: any): Promise<Claim> {
+    if (![ClaimStatus.CANCELED, ClaimStatus.APPEALED].includes(update.status)) {
+      throw new ForbiddenException('Incorrect Status');
+    }
     return this.claimService.updateClaimForUser(id, req.user.id, update);
   }
 
@@ -85,6 +88,9 @@ export class ClaimController {
   @UseGuards(AdminGuard)
   @ApiBody({ type: ClaimApprovalDto })
   async updateClaim(@Param('id') id: string, @Body() update: ClaimApprovalDto, @Req() req: any): Promise<Claim> {
+    if (![ClaimStatus.ACCEPTED, ClaimStatus.REJECTED, ClaimStatus.REPAIRED].includes(update.status)) {
+      throw new ForbiddenException('Incorrect Status');
+    }
     return this.claimService.updateClaimForAdmin(id, req.user.id, update);
   }
 
