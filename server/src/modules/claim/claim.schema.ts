@@ -12,6 +12,17 @@ export enum ClaimStatus {
   REPAIRED = 'Repaired',
 }
 
+export enum ClaimApprovalStatus {
+  ACCEPTED = 'Accepted',
+  REJECTED = 'Rejected',
+  REPAIRED = 'Repaired',
+}
+
+export enum ClaimAppealStatus {
+  APPEALED = 'Appealed',
+  CANCELED = 'Canceled',
+}
+
 @Schema({ timestamps: true })
 export class Claim {
   @Prop({ required: true })

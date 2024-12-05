@@ -39,12 +39,10 @@ export default function Header() {
     try {
       const resp = await createClaim(values); // Make API call
       setloading(false)
-      location.reload()
-      console.log("resprespresp",resp); // Handle the successful response here (e.g., redirect, show success message)
+      location.reload();
     } catch (error: any) {
         setloading(false)
-      console.error("Error submitting claim:", error.message || error); // Log the error message
-      // Optionally: Handle the error (e.g., show an error message to the user)
+      console.error("Error submitting claim:", error.message || error);
     }
   };
   

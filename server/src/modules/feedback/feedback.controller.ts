@@ -4,7 +4,7 @@ import { CreateFeedbackDto } from './feedback.dto';
 import { Feedback } from './feedback.schema';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/guards/auth.guard';
 
 @Controller('feedback')
 @ApiTags('Feedback')

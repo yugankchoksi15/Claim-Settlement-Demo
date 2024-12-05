@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Feedback, FeedbackDocument } from './feedback.schema';
 import { CreateFeedbackDto } from './feedback.dto';
-import { Claim } from 'src/claim/claim.schema';
+import { Claim } from 'src/modules/claim/claim.schema';
 
 @Injectable()
 export class FeedbackService {

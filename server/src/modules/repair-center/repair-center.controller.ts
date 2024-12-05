@@ -4,7 +4,7 @@ import { RepairCenterService } from './repair-center.service';
 import { CreateRepairCenterDto } from './repair-center-dto';
 import { RepairCenter } from './repair-center-schema';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/guards/auth.guard';
 
 @ApiTags('Repair Center')
 @ApiBearerAuth()

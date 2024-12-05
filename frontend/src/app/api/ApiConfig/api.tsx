@@ -60,13 +60,32 @@ export const getClaimAPI = async () => {
   }
 };
 
-export const createClaim = async (data:any) => {
+export const createClaim = async (data: any) => {
   try {
- 
-    const response = await api.post("/claim", data);
+    const formData = new FormData();
+
+    // Append simple fields
+    formData.append("issueDescription", data.issueDescription);
+    formData.append("company", data.company);
+    formData.append("model", data.model);
+    formData.append("yearOfManufacturing", data.yearOfManufacturing.toString());
+    formData.append("vehicleNumber", data.vehicleNumber);
+    formData.append("repairCenter", data.repairCenter);
+
+    // Append files (assuming documents is an object or array of files)
+    Object.keys(data.documents).forEach((key) => {
+      formData.append("file", data.documents[key]); // Key must match the field name used in backend
+    });
+
+    // Send the request
+    const response = await api.post("/claim", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     return response.data; // Return the data from the API response
-  } catch (error:any) {
+  } catch (error: any) {
     // Handle and throw the error
     if (error.response) {
       throw new Error(error.response.data.message || "Claim creation failed");
@@ -75,6 +94,7 @@ export const createClaim = async (data:any) => {
     }
   }
 };
+
 
 export const getRepairecenterApi = async () => {
   try {

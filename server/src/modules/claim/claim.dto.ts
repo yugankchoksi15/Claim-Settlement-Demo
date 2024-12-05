@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsNumber, IsEnum, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ClaimStatus } from './claim.schema';
+import { ClaimAppealStatus, ClaimApprovalStatus } from './claim.schema';
 
 export class CreateClaimDto {
   @ApiProperty({
@@ -52,16 +52,38 @@ export class CreateClaimDto {
   repairCenter: string;
 }
 
-export class UpdateClaimDto {
+export class ClaimAppealDto {
 
-  @IsEnum(ClaimStatus)
-  @IsNotEmpty()
+  @IsEnum(ClaimAppealStatus)
+  @IsOptional()
   @ApiProperty({
     description: 'The status you want to change to',
     example: 'Appealed',
-    enum: ClaimStatus,
+    enum: ClaimAppealStatus,
     enumName: 'ClaimStatus',
   })
-  status: ClaimStatus;
+  status: ClaimAppealStatus ;
+
+  @ApiProperty({
+    description: 'Id of the repair center',
+    example: '7mip6526y446l4m@m42',
+  })
+  @IsOptional()
+  @IsString()
+  repairCenter: string;
+}
+
+
+export class ClaimApprovalDto {
+
+  @IsEnum(ClaimApprovalStatus)
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'The status you want to change to',
+    example: 'Approved',
+    enum: ClaimApprovalStatus,
+    enumName: 'ClaimStatus',
+  })
+  status: ClaimApprovalStatus;
 }
 
