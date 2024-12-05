@@ -128,7 +128,7 @@ export default function ListClaim() {
                       Year Of Manufacturing
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Issue Description
+                      Status
                     </th>
                     <th scope="col" className="px-6 py-3">
                       View Document
@@ -201,20 +201,6 @@ export default function ListClaim() {
                                 Feedback
                               </button>
                             ) : null}
-                          </div>
-                          <div>
-                            {claim.documents[0] &&
-                            Object.keys(claim.documents[0]).length > 0 ? (
-                              <a
-                                href={`${process.env.NEXT_PUBLIC_API_URL}${claim.documents[0]}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <span className="text-yellow-500">View</span>
-                              </a>
-                            ) : (
-                              <span className="text-gray-500"></span>
-                            )}
                           </div>
                         </div>
                       </td>
