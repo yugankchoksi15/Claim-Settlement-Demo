@@ -110,3 +110,18 @@ export const getRepairecenterApi = async () => {
   }
 };
 
+export const AddFeedbackAPI = async ({ claimId, score, comments }: any) => {
+  try {
+    const response = await api.post("/feedback", { claimId, score, comments });
+    return response.data; // Return the data from the API response
+  } catch (error: any) {
+    // Handle and throw the error
+    if (error.response) {
+      throw new Error(error.response.data.message || "Feedback submission failed");
+    } else {
+      throw new Error("Network error or server unavailable");
+    }
+  }
+};
+
+
