@@ -47,7 +47,7 @@ export class Claim {
   issueDescription: string;
 
   // Update repairCenter and feedback to be ObjectId references
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'RepairCenter', required: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'RepairCenter', default: null })
   repairCenter: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Feedback', default: null })
