@@ -26,7 +26,9 @@ export class ClaimService {
     page: number,
     limit: number,
   ): Promise<PaginationResult<Claim>> {
-    const query = this.claimModel.find({ userId });
+    const query = this.claimModel.find({ userId })
+    .populate('repairCenter', 'name address city contactNumber') // Specify fields to populate
+    .populate('feedback', 'score comments');
     return paginate(query, page, limit);
   }
 
