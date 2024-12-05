@@ -19,6 +19,7 @@ export default function Header() {
   const [repaireCenter, setRepaireCenter] = useState<any>([]);
   const [loading, setloading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [count, setCount] = useState(0)
 
   const dropdownRef = useRef<HTMLDivElement>(null); // Type here
 
@@ -74,6 +75,8 @@ export default function Header() {
     try {
       const resp = await createClaim(values); // Make API call
       setloading(false);
+      setCount(prev => prev + 1)
+      localStorage.setItem("count", count.toString());
       setCurrentStep(1);
       setIsDialogOpen(false);
     } catch (error: any) {
