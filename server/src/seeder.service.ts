@@ -14,8 +14,6 @@ export class SeederService {
     const existingUser = await this.userModel.findOne({ email: process.env.SUPER_ADMIN_EMAIL });
 
     if (!existingUser) {
-
-        console.log('-----------------------------------------------', process.env.SUPER_ADMIN_EMAIL)
     
       const newUser = new this.userModel({
         firstName: process.env.SUPER_ADMIN_FNAME,
