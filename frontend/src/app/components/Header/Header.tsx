@@ -4,14 +4,13 @@ import React, { useEffect, useState } from "react";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { FaMapMarkerAlt, FaPhone, FaCity, FaBuilding } from "react-icons/fa";
-import ClaimInfo from "../Step1/ClaimInfo";
-import UploadDocument from "../Step2/UploadDocument";
-import RepairCenter from "../Step3/RepairCenter";
+import ClaimInfo from "../ListClaim/addClaim/Step1/ClaimInfo";
+import UploadDocument from "../ListClaim/addClaim/Step2/UploadDocument";
+import RepairCenter from "../ListClaim/addClaim/Step3/RepairCenter";
 import { createClaim, getRepairecenterApi } from "@/app/api/ApiConfig/api";
 import SmallLoadingSpinner from "../loader";
-import { increment } from '../../redux/slice/counterSlice';
-import { useDispatch } from 'react-redux';
-
+import { increment } from "../../redux/slice/counterSlice";
+import { useDispatch } from "react-redux";
 
 export default function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -21,9 +20,22 @@ export default function Header() {
   const [selectedRepairCenter, setSelectedRepairCenter] = useState<any>(null);
   const [repaireCenter, setRepaireCenter] = useState<any>([]);
   const [loading, setloading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Function to toggle the dropdown
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  // Function to handle logout
+  const handleLogout = () => {
+    // Logic for logging out (e.g., clearing tokens, redirecting, etc.)
+    console.log("Logging out...");
+    localStorage.clear();
+    location.reload()
+  };
 
   const dispatch = useDispatch();
-
 
   const getRepaireCenterData = async () => {
     try {
@@ -41,27 +53,28 @@ export default function Header() {
   }, [isDialogOpen]);
 
   const handleSubmitClaim = async (values: any) => {
-    setloading(true)
+    setloading(true);
     try {
       const resp = await createClaim(values); // Make API call
-      setloading(false)
-      dispatch(increment())
-      setIsDialogOpen(false)
+      setloading(false);
+      dispatch(increment());
+      setCurrentStep(1);
+      setIsDialogOpen(false);
     } catch (error: any) {
-        setloading(false)
+      setloading(false);
       console.error("Error submitting claim:", error.message || error);
     }
   };
-  
+
   const handleRepairCenterChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedId = event.target.value;
     if (selectedId) {
       const selectedCenter = repaireCenter?.find(
-        (center:any) => center._id === selectedId
+        (center: any) => center._id === selectedId
       );
-      console.log('selectedCenter', selectedCenter)
+      console.log("selectedCenter", selectedCenter);
       setSelectedRepairCenter(selectedCenter);
     } else {
       setSelectedRepairCenter(null);
@@ -115,7 +128,9 @@ export default function Header() {
       issueDescription: Yup.string().required("Issue Description is required"),
       company: Yup.string().required("Company is required"),
       model: Yup.string().required("Model is required"),
-      yearOfManufacturing: Yup.date().required("Manufacturing year is required").nullable(),
+      yearOfManufacturing: Yup.date()
+        .required("Manufacturing year is required")
+        .nullable(),
       vehicleNumber: Yup.string().required("Vehicle number is required"),
     });
   };
@@ -127,7 +142,7 @@ export default function Header() {
           className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800"
           style={{ backgroundColor: "#0A172B" }}
         >
-          <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+          <div className="flex flex-wrap justify-between items-center mx-auto">
             <div className="flex items-center lg:order-2">
               <button
                 onClick={openDialog}
@@ -135,7 +150,33 @@ export default function Header() {
               >
                 Claim
               </button>
+              <div className="relative">
+                <div
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-500 cursor-pointer"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
+                  <span className="text-white font-semibold">U</span>{" "}
+                  {/* Replace with icon if needed */}
+                </div>
+
+                {/* Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg border w-48 z-50">
+                    <ul className="py-2">
+                      <li>
+                        <button
+                          onClick={handleLogout}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
+
             <div
               className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
               id="mobile-menu-2"
@@ -154,6 +195,8 @@ export default function Header() {
                 </li>
               </ul>
             </div>
+
+            {/* User Icon and Dropdown */}
           </div>
         </nav>
       </header>
@@ -211,7 +254,7 @@ export default function Header() {
                   yearOfManufacturing: "",
                   vehicleNumber: "",
                   documents: [], // Add documents field here
-                  repairCenter:"",
+                  repairCenter: "",
                 }}
                 validationSchema={getValidationSchema(currentStep)} // Dynamically get validation schema
                 onSubmit={(values, { setSubmitting }) => {
@@ -219,7 +262,7 @@ export default function Header() {
                   nextStep(); // Proceed to next step
                 }}
               >
-                {({values, setFieldValue, handleSubmit, errors, touched }) => (
+                {({ values, setFieldValue, handleSubmit, errors, touched }) => (
                   <Form onSubmit={handleSubmit}>
                     {currentStep === 1 && (
                       <div className="mb-4 flex space-x-8">
@@ -275,7 +318,7 @@ export default function Header() {
                           className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                           onClick={() => handleSubmitClaim(values)}
                         >
-                            {loading ? <SmallLoadingSpinner /> : "Submit"}
+                          {loading ? <SmallLoadingSpinner /> : "Submit"}
                         </button>
                       ) : (
                         <button

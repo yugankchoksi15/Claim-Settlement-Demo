@@ -4,6 +4,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const ClaimInfo = ({ issueDescriptionName, errors, touched }: any) => {
+  const currentYear = new Date().getFullYear();
+  
   return (
     <>
       <div className="w-1/2">
@@ -78,15 +80,14 @@ const ClaimInfo = ({ issueDescriptionName, errors, touched }: any) => {
           >
             Year of Manufacturing
           </label>
+
           <Field
             name="yearOfManufacturing"
             className="w-full border rounded-lg p-2"
             render={({ field, form }: any) => (
               <DatePicker
                 {...field}
-                selected={
-                  field.value ? new Date(field.value, 0) : null // Convert year to Date object
-                }
+                selected={field.value ? new Date(field.value, 0) : null} // Convert year to Date object
                 onChange={(date) =>
                   form.setFieldValue(
                     "yearOfManufacturing",
@@ -96,6 +97,7 @@ const ClaimInfo = ({ issueDescriptionName, errors, touched }: any) => {
                 showYearPicker
                 dateFormat="yyyy"
                 placeholderText="Enter manufacturing year"
+                maxDate={new Date(currentYear, 0)} // Disable future years
                 className="w-full border rounded-lg p-2"
               />
             )}

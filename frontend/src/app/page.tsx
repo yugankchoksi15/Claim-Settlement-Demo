@@ -1,11 +1,8 @@
 // pages/HomePage.tsx
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import ListClaim from './components/ListClaim/ListClaim';
-import Header from './components/Header/Header';
-import useAuth from './components/useAuth';
+import useAuth from './components/UserAuthCheck/useAuth';
 
 export default function HomePage() {
   useAuth();

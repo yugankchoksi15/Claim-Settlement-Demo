@@ -7,6 +7,7 @@ import { defaultMetadata } from "@/constant/metadata"; // Import the metadata
 import Header from "./components/Header/Header";
 import Footer from "./components/footer/footer";
 import ReduxProvider from "./redux/provider";
+import useAuth from "./components/UserAuthCheck/useAuth";
 
 export default function RootLayout({
   children,
@@ -14,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-
+  useAuth();
   React.useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token); // Set `isLoggedIn` to true if token exists
