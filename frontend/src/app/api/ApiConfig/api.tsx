@@ -70,7 +70,7 @@ export const createClaim = async (data: any) => {
     formData.append("model", data.model);
     formData.append("yearOfManufacturing", data.yearOfManufacturing.toString());
     formData.append("vehicleNumber", data.vehicleNumber);
-    formData.append("repairCenter", data.repairCenter);
+    formData.append("repairCenter", "6750631d5825e4dfac3e33c4");
 
     // Append files (assuming documents is an object or array of files)
     Object.keys(data.documents).forEach((key) => {
