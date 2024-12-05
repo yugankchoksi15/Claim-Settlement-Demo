@@ -6,6 +6,7 @@ import Pagination from "../pagination";
 import Feedback from "../Feedback/feedback";
 import RepairCenterDialog from "../RepairCenterDialog/RepairCenterDialog";
 import CancelDialog from "./DialogStatus/CancelDialog";
+import ApealDialog from "./DialogStatus/ApealDialog";
 
 export default function ListClaim() {
   const [claimData, setClaimData] = useState([]);
@@ -13,13 +14,17 @@ export default function ListClaim() {
   const [claimTotal, setCliamTotal] = useState(0);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [selectedClaimId, setSelectedClaimId] = useState<string | null>(null);
-  const [isRepairCenterDialogOpen, setIsRepairCenterDialogOpen] = useState(false);
-  const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
+  const [isRepairCenterDialogOpen, setIsRepairCenterDialogOpen] =
+    useState(false);
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [ApealDialogOpen, setApealDialogOpen] = useState(false);
   const [selectedClaimForRepair, setSelectedClaimForRepair] = useState<
     string | null
   >(null);
 
-  const initialCount = localStorage.getItem("count") ? parseInt(localStorage.getItem("count")!) : 0;
+  const initialCount = localStorage.getItem("count")
+    ? parseInt(localStorage.getItem("count")!)
+    : 0;
   const [count, setCount] = useState<number>(initialCount);
 
   const getCount = localStorage.getItem("count");
@@ -28,7 +33,7 @@ export default function ListClaim() {
     // Listen for changes in localStorage across tabs
     const handleStorageChange = () => {
       const updatedCount: any = localStorage.getItem("count");
-        setCount(parseInt(updatedCount));
+      setCount(parseInt(updatedCount));
     };
 
     // Attach event listener
@@ -39,7 +44,6 @@ export default function ListClaim() {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
-
 
   const getClaimData = async () => {
     try {
@@ -83,18 +87,21 @@ export default function ListClaim() {
   const closeRepairCenterDialog = () => {
     setIsRepairCenterDialogOpen(false);
     setSelectedClaimForRepair(null);
-    setCancelDialogOpen(false)
+    setCancelDialogOpen(false);
+    setApealDialogOpen(false);
   };
 
   const handleCancelClaim = (claimId: string) => {
     // Implement cancel logic here
-    setCancelDialogOpen(true)
+    setCancelDialogOpen(true);
     setSelectedClaimForRepair(claimId);
     console.log(`Cancel claim with ID: ${claimId}`);
   };
 
   const handleAppealClaim = (claimId: string) => {
     // Implement appeal logic here
+    setApealDialogOpen(true);
+    setSelectedClaimForRepair(claimId);
     console.log(`Appeal claim with ID: ${claimId}`);
   };
 
@@ -185,9 +192,7 @@ export default function ListClaim() {
                                 <span className="text-yellow-500">View</span>
                               </a>
                             ) : (
-                              <span className="text-gray-500">
-                                
-                              </span>
+                              <span className="text-gray-500"></span>
                             )}
                           </div>
                         </div>
@@ -218,9 +223,13 @@ export default function ListClaim() {
             onClose={closeRepairCenterDialog}
             claimId={selectedClaimForRepair}
           />
-
-          <CancelDialog 
-            isOpen={cancelDialogOpen} 
+          <CancelDialog
+            isOpen={cancelDialogOpen}
+            claimId={selectedClaimForRepair}
+            onClose={closeRepairCenterDialog}
+          />
+          <ApealDialog
+            isOpen={ApealDialogOpen}
             claimId={selectedClaimForRepair}
             onClose={closeRepairCenterDialog}
           />
