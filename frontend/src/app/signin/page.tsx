@@ -107,28 +107,6 @@ const SignUpPage = () => {
               )}
             </div>
 
-            <div className="flex items-center mt-8">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 shrink-0 rounded"
-                onChange={formik.handleChange}
-              />
-              <label
-                htmlFor="remember-me"
-                className="text-white ml-3 block text-sm"
-              >
-                I accept the{" "}
-                <a
-                  href="javascript:void(0);"
-                  className="text-yellow-500 font-semibold hover:underline ml-1"
-                >
-                  Terms and Conditions
-                </a>
-              </label>
-            </div>
-
             <div className="mt-12">
               <button
                 type="submit"
