@@ -44,7 +44,9 @@ export default function SignUpPage() {
       const resp = await signupApi(values); // API call
       // Handle success (you can process the response here)
       if(resp){
-        router.push('/signin')
+        const token = resp.token;
+        localStorage.setItem("token", token);
+        router.push('/')
         setloading(false)
         // console.log('SignUP successful:', resp);
       }

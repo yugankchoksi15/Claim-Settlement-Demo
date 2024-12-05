@@ -144,7 +144,7 @@ const SignUpPage = () => {
               <p className="text-sm text-white mt-8">
                 don't have an account?{" "}
                 <a
-                  href="/signup"
+                  onClick={() => {router.push("/signup")}}
                   className="text-yellow-400 font-semibold hover:underline ml-1"
                 >
                   Signup here
