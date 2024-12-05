@@ -22,28 +22,6 @@ export default function ListClaim() {
     string | null
   >(null);
 
-  const initialCount = localStorage.getItem("count")
-    ? parseInt(localStorage.getItem("count")!)
-    : 0;
-  const [count, setCount] = useState<number>(initialCount);
-
-  const getCount = localStorage.getItem("count");
-
-  useEffect(() => {
-    // Listen for changes in localStorage across tabs
-    const handleStorageChange = () => {
-      const updatedCount: any = localStorage.getItem("count");
-      setCount(parseInt(updatedCount));
-    };
-
-    // Attach event listener
-    window.addEventListener("storage", handleStorageChange);
-
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
 
   const getClaimData = async () => {
     try {
@@ -57,7 +35,7 @@ export default function ListClaim() {
 
   useEffect(() => {
     getClaimData();
-  }, [page, count]);
+  }, [page]);
 
   const handlePageNext = () => {
     setPage((prev) => prev + 1);
@@ -126,7 +104,7 @@ export default function ListClaim() {
                       Year Of Manufacturing
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Issue Description
+                      Status
                     </th>
                     <th scope="col" className="px-6 py-3">
                       View Document
@@ -199,20 +177,6 @@ export default function ListClaim() {
                                 Feedback
                               </button>
                             ) : null}
-                          </div>
-                          <div>
-                            {claim.documents[0] &&
-                            Object.keys(claim.documents[0]).length > 0 ? (
-                              <a
-                                href={`${process.env.NEXT_PUBLIC_API_URL}${claim.documents[0]}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <span className="text-yellow-500">View</span>
-                              </a>
-                            ) : (
-                              <span className="text-gray-500"></span>
-                            )}
                           </div>
                         </div>
                       </td>

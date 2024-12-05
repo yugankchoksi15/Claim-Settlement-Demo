@@ -17,7 +17,7 @@ export default function RootLayout({
   useAuth();
   React.useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Set `isLoggedIn` to true if token exists
+    setIsLoggedIn(token ? true : false); // Set `isLoggedIn` to true if token exists
   }, []); // Run only once on mount
 
   return (
@@ -30,14 +30,7 @@ export default function RootLayout({
           <meta name="keywords" content={defaultMetadata.keywords} />
           <meta name="author" content={defaultMetadata.author} />
         </Head>
-        {isLoggedIn ? (
-          <>
-              <Header />
-              <main className="flex-grow">{children}</main>
-          </>
-        ) : (
-          <main className="flex-grow">{children}</main>
-        )}
+        <main className="flex-grow">{children}</main>
       </body>
     </html>
   );

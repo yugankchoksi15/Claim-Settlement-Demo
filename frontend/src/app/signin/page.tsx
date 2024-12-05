@@ -41,10 +41,6 @@ const SignUpPage = () => {
         localStorage.setItem("token", resp);
         router.push("/");
         setloading(false);
-
-        setTimeout(() => {
-          location.reload();
-        }, 100);
       }
     } catch (error) {
       // Handle error (e.g., show a message to the user)
