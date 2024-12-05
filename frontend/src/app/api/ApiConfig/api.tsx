@@ -46,9 +46,9 @@ export const signupApi = async (value: any) => {
   }
 };
 
-export const getClaimAPI = async () => {
+export const getClaimAPI = async (page:any) => {
   try {
-    const response = await api.get("/claim");
+    const response = await api.get(`/claim?page=${page}&limit=10`);
     return response.data; // Return the data from the API response
   } catch (error: any) {
     // Handle and throw the error
