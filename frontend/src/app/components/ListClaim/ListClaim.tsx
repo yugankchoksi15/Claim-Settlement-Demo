@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getClaimAPI } from "@/app/api/ApiConfig/api";
 import Pagination from "../pagination";
-import { useSelector } from 'react-redux';
 
 
 export default function ListClaim() {
@@ -11,7 +10,6 @@ export default function ListClaim() {
   const [page, setPage] = useState(1);
   const [claimTotal, setCliamTotal] = useState(0);
 
-  const count = useSelector((state: any) => state.counter.value);
 
   const getClaimData = async () => {
     try {
@@ -25,7 +23,7 @@ export default function ListClaim() {
 
   useEffect(() => {
     getClaimData();
-  }, [page, count]);
+  }, [page]);
 
   const handlePageNext = () => {
     setPage((prev) => prev + 1);

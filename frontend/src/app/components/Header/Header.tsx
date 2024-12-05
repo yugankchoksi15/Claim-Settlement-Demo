@@ -9,8 +9,6 @@ import UploadDocument from "../ListClaim/addClaim/Step2/UploadDocument";
 import RepairCenter from "../ListClaim/addClaim/Step3/RepairCenter";
 import { createClaim, getRepairecenterApi } from "@/app/api/ApiConfig/api";
 import SmallLoadingSpinner from "../loader";
-import { increment } from "../../redux/slice/counterSlice";
-import { useDispatch } from "react-redux";
 
 export default function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -35,7 +33,6 @@ export default function Header() {
     location.reload()
   };
 
-  const dispatch = useDispatch();
 
   const getRepaireCenterData = async () => {
     try {
@@ -57,7 +54,6 @@ export default function Header() {
     try {
       const resp = await createClaim(values); // Make API call
       setloading(false);
-      dispatch(increment());
       setCurrentStep(1);
       setIsDialogOpen(false);
     } catch (error: any) {

@@ -6,7 +6,6 @@ import "@/styles/colors.css";
 import { defaultMetadata } from "@/constant/metadata"; // Import the metadata
 import Header from "./components/Header/Header";
 import Footer from "./components/footer/footer";
-import ReduxProvider from "./redux/provider";
 import useAuth from "./components/UserAuthCheck/useAuth";
 
 export default function RootLayout({
@@ -33,11 +32,9 @@ export default function RootLayout({
         </Head>
         {isLoggedIn ? (
           <>
-            <ReduxProvider>
               <Header />
               <main className="flex-grow">{children}</main>
               <Footer />
-            </ReduxProvider>
           </>
         ) : (
           <main className="flex-grow">{children}</main>
