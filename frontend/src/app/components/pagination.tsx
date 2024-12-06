@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from "next-intl";
 import React from "react";
 
 const Pagination = ({
@@ -8,20 +9,23 @@ const Pagination = ({
   handlePagePrev,
   handlePageNext,
 }: any) => {
+
+  const t = useTranslations('HomePage');
+
   return (
     <div className="flex flex-col items-end mr-6 absolute  right-2">
       <span className="text-sm text-gray-700 dark:text-gray-400">
-        Showing{" "}
+      {t('Showing')} {" "}
         <span className="font-semibold text-gray-900 dark:text-white">
           {page}
         </span>{" "}
-        to{" "}
+       {t('to')} {" "}
         <span className="font-semibold text-gray-900 dark:text-white">10</span>{" "}
-        of{" "}
+        {t('of')} {" "}
         <span className="font-semibold text-gray-900 dark:text-white">
           {claimTotal}
         </span>{" "}
-        Entries
+         {t('Entries')}
       </span>
 
       <div className="inline-flex mt-2 xs:mt-0">
@@ -29,7 +33,7 @@ const Pagination = ({
           onClick={handlePagePrev}
           className="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-yellow-500 rounded-s hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
         >
-          Prev
+           {t('Prev')}
         </button>
         <button
           onClick={handlePageNext}
@@ -38,7 +42,7 @@ const Pagination = ({
           }`}
           disabled={page * 10 >= claimTotal}
         >
-          Next
+           {t('Next')}
         </button>
       </div>
     </div>

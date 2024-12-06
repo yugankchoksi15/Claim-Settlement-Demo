@@ -3,19 +3,21 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { signupApi } from '../api/ApiConfig/api';
-import { useRouter } from 'next/navigation';
-import SmallLoadingSpinner from '../components/loader';
-import '../CSS/login.css'
+import { signupApi } from '@/app/api/ApiConfig/api';
+import { usePathname, useRouter } from 'next/navigation';
+import SmallLoadingSpinner from '@/app/components/loader';
+import '@/app/CSS/login.css'
 import { useTranslations } from 'next-intl';
 
 export default function SignUpPage() {
 
-  const t = useTranslations('HomePage');
-
   const [loading, setloading] = useState(false)
 
+  const t = useTranslations('SignUp');
+
   const router = useRouter()
+  const path = usePathname();
+  const locale = path.split('/')[1];
   // Set up validation schema using Yup
   const validationSchema = Yup.object({
     firstName: Yup.string().required(t('First Name is required')),
@@ -72,7 +74,7 @@ export default function SignUpPage() {
         <div className="flex items-center md:p-8 p-6 bg-[#0C172C] h-full lg:w-11/12 lg:ml-auto">
           <form onSubmit={formik.handleSubmit} className="max-w-lg w-full mx-auto">
             <div className="mb-12">
-              <h3 className="text-3xl font-bold text-yellow-400">{t('Create an account')}</h3>
+              <h3 className="text-3xl font-bold text-yellow-400"> {t('Create an account')}</h3>
             </div>
 
             <div>
@@ -149,7 +151,7 @@ export default function SignUpPage() {
             </div>
 
             <div className="mt-8">
-              <label className="text-white text-xs block mb-2">{t('Password')}</label>
+              <label className="text-white text-xs block mb-2"> {t('Password')}</label>
               <div className="relative flex items-center">
                 <input
                   name="password"
@@ -171,16 +173,16 @@ export default function SignUpPage() {
 
             <div className="mt-6">
               <button type="submit" className="w-full bg-yellow-400 text-white text-xs py-3 rounded-sm">
-              {loading ? <SmallLoadingSpinner />  : "Register"}             
+              {loading ? <SmallLoadingSpinner />  : `${t("Register")}`}             
               </button>
               
             </div>
 
             <div className="mt-6">
               <span className="text-xs text-white">
-              {t('Already have an account?')}{' '}
-                <a href="/signin" className="font-semibold text-yellow-400">
-                {t('Log In')}
+                {t('Already have an account?')}{' '}
+                <a    onClick={() => {router.push(`/${locale}/sigin`)}} className="font-semibold text-yellow-400">
+                  {t('Log In')}
                 </a>
               </span>
             </div>

@@ -3,17 +3,19 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { loginAPI } from "../api/ApiConfig/api";
-import SmallLoadingSpinner from "../components/loader";
-import { useRouter } from "next/navigation";
-import "../CSS/login.css";
+import { loginAPI } from "@/app/api/ApiConfig/api";
+import SmallLoadingSpinner from '@/app/components/loader';
+import { usePathname, useRouter } from "next/navigation";
+import "@/app/CSS/login.css";
 import { useTranslations } from "next-intl";
 
 const SignUpPage = () => {
   const [loading, setloading] = useState(false);
   const router = useRouter();
+  const path = usePathname();
+  const locale = path.split('/')[1];
 
-  const t = useTranslations('HomePage');
+  const t = useTranslations('SignIn');
 
   // Validation schema using Yup
   const validationSchema = Yup.object({
@@ -24,7 +26,6 @@ const SignUpPage = () => {
       .min(6, t("Password must be at least 6 characters"))
       .required(t("Password is required")),
   });
-
 
   const formik: any = useFormik({
     initialValues: {
@@ -119,12 +120,12 @@ const SignUpPage = () => {
                 {loading ? <SmallLoadingSpinner /> : "Login"}
               </button>
               <p className="text-sm text-white mt-8">
-              {t(`don't have an account?`)} {" "}
+             {t(`don't have an account?`)} {" "}
                 <a
-                  onClick={() => {router.push("/signup")}}
+                  onClick={() => {router.push(`/${locale}/signup`)}}
                   className="text-yellow-400 font-semibold hover:underline ml-1"
                 >
-                 {t('Signup here')} 
+                 {t('Signup here')}
                 </a>
               </p>
             </div>

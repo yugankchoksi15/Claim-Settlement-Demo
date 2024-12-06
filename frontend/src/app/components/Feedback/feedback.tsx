@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { AddFeedbackAPI } from "@/app/api/ApiConfig/api";
+import { useTranslations } from "next-intl";
 
 interface FeedbackProps {
   isOpen: boolean;
   onClose: () => void;
-  claimId: string | null; // Added claimId prop
+  claimId: string | null; // Added claimId prop,
+  setCount: any
 }
 
-const Feedback: React.FC<FeedbackProps> = ({ isOpen, onClose, claimId }) => {
+const Feedback: React.FC<FeedbackProps> = ({ isOpen, onClose, claimId, setCount }) => {
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false); // To track loading state
@@ -18,6 +20,8 @@ const Feedback: React.FC<FeedbackProps> = ({ isOpen, onClose, claimId }) => {
     setRating(value);
     setError(null); // Clear error when a rating is selected
   };
+
+  const t = useTranslations('HomePage');
 
   const handleSubmit = async () => {
     if (!claimId) {
@@ -43,6 +47,7 @@ const Feedback: React.FC<FeedbackProps> = ({ isOpen, onClose, claimId }) => {
       setSuccess(true); // Show success message
       setTimeout(() => {
         onClose(); // Close dialog after a short delay
+        setCount((prev: any) => prev + 1)
         setSuccess(false); // Reset success state
       }, 2000);
     } catch (err: any) {
@@ -57,7 +62,7 @@ const Feedback: React.FC<FeedbackProps> = ({ isOpen, onClose, claimId }) => {
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-        <h3 className="text-xl font-semibold mb-4 text-center">Submit Your Feedback</h3>
+        <h3 className="text-xl font-semibold mb-4 text-center">{t('Submit Your Feedback')}</h3>
 
         {/* Star Rating Section */}
         <div className="flex justify-center mb-4">
@@ -79,7 +84,7 @@ const Feedback: React.FC<FeedbackProps> = ({ isOpen, onClose, claimId }) => {
             onChange={(e) => setComment(e.target.value)}
             rows={4}
             className="w-full border rounded-lg p-2"
-            placeholder="Write your comment here..."
+            placeholder= {t('Write your comment here')}
           />
         </div>
 
@@ -87,7 +92,7 @@ const Feedback: React.FC<FeedbackProps> = ({ isOpen, onClose, claimId }) => {
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
         {/* Success Message */}
-        {success && <p className="text-green-500 text-sm mb-4">Feedback submitted successfully!</p>}
+        {success && <p className="text-green-500 text-sm mb-4"> {t('Feedback submitted successfully!')}</p>}
 
         {/* Submit and Close Buttons */}
         <div className="flex justify-end space-x-4">
@@ -95,7 +100,7 @@ const Feedback: React.FC<FeedbackProps> = ({ isOpen, onClose, claimId }) => {
             onClick={onClose}
             className="text-gray-500 border border-gray-300 rounded-lg px-4 py-2"
           >
-            Close
+           {t('Close')}
           </button>
           <button
             onClick={handleSubmit}

@@ -9,8 +9,9 @@ import UploadDocument from "../ListClaim/addClaim/Step2/UploadDocument";
 import RepairCenter from "../ListClaim/addClaim/Step3/RepairCenter";
 import { createClaim, getRepairecenterApi } from "@/app/api/ApiConfig/api";
 import SmallLoadingSpinner from "../loader";
+import { useTranslations } from "next-intl";
 
-export default function Header() {
+export default function Header({ setCount }:any) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [fileNames, setFileNames] = useState<string[]>([]);
@@ -19,7 +20,6 @@ export default function Header() {
   const [repaireCenter, setRepaireCenter] = useState<any>([]);
   const [loading, setloading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [count, setCount] = useState(0)
 
   const dropdownRef = useRef<HTMLDivElement>(null); // Type here
 
@@ -29,6 +29,7 @@ export default function Header() {
       setIsDropdownOpen(false); // Close dropdown if the click is outside
     }
   };
+  const t = useTranslations('HomePage');
 
   useEffect(() => {
     // Add the event listener when the component mounts
@@ -49,7 +50,6 @@ export default function Header() {
   // Function to handle logout
   const handleLogout = () => {
     // Logic for logging out (e.g., clearing tokens, redirecting, etc.)
-    console.log("Logging out...");
     localStorage.clear();
     location.reload()
   };
@@ -75,8 +75,7 @@ export default function Header() {
     try {
       const resp = await createClaim(values); // Make API call
       setloading(false);
-      setCount(prev => prev + 1)
-      localStorage.setItem("count", count.toString());
+      setCount((prev: any) => prev + 1)
       setCurrentStep(1);
       setIsDialogOpen(false);
     } catch (error: any) {
@@ -111,7 +110,6 @@ export default function Header() {
       const fileList = Array.from(selectedFiles);
       setFiles(fileList);
       setFileNames(fileList.map((file) => file.name));
-      console.log("Selected files:", fileList);
     }
   };
 
@@ -138,12 +136,12 @@ export default function Header() {
   const getValidationSchema = (currentStep: any) => {
     return Yup.object({
       issueDescription: Yup.string().required("Issue Description is required"),
-      company: Yup.string().required("Company is required"),
-      model: Yup.string().required("Model is required"),
+      company: Yup.string().required(t("Company is required")),
+      model: Yup.string().required(t("Model is required")),
       yearOfManufacturing: Yup.date()
-        .required("Manufacturing year is required")
+        .required(t("Manufacturing year is required"))
         .nullable(),
-      vehicleNumber: Yup.string().required("Vehicle number is required"),
+      vehicleNumber: Yup.string().required(t("Vehicle number is required")),
     });
   };
 
@@ -160,7 +158,7 @@ export default function Header() {
                 onClick={openDialog}
                 className="text-white bg-yellow-500 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
               >
-                Claim
+                 {t('Claim')}
               </button>
               <div className="relative">
                 <div
@@ -180,7 +178,7 @@ export default function Header() {
                           onClick={handleLogout}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                         >
-                          Logout
+                           {t('Logout')}
                         </button>
                       </li>
                     </ul>
@@ -201,7 +199,7 @@ export default function Header() {
                     aria-current="page"
                   >
                     <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white text-yellow-400">
-                      Claim
+                    {t('Claim')}
                     </span>
                   </a>
                 </li>
@@ -218,7 +216,7 @@ export default function Header() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-[55rem]">
             <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="text-lg font-semibold">Claim Process</h2>
+              <h2 className="text-lg font-semibold">  {t('Claim Process')}</h2>
               <button
                 onClick={closeDialog}
                 className="text-gray-500 hover:text-gray-700"
@@ -235,7 +233,7 @@ export default function Header() {
                       : "border-gray-300 text-gray-500"
                   }`}
                 >
-                  Claim Info
+                   {t('Claim Info')}
                 </div>
                 <div
                   className={`w-1/3 text-center border-b-2 ${
@@ -244,17 +242,9 @@ export default function Header() {
                       : "border-gray-300 text-gray-500"
                   }`}
                 >
-                  Upload Claim Document
+                   {t('Upload Claim Document')}
                 </div>
-                {/* <div
-                  className={`w-1/3 text-center border-b-2 ${
-                    currentStep >= 3
-                      ? "border-blue-500 text-blue-500"
-                      : "border-gray-300 text-gray-500"
-                  }`}
-                >
-                  Step 3
-                </div> */}
+
               </div>
 
               {/* Step 1 - Claim Info and Vehicle Info */}
@@ -270,7 +260,6 @@ export default function Header() {
                 }}
                 validationSchema={getValidationSchema(currentStep)} // Dynamically get validation schema
                 onSubmit={(values, { setSubmitting }) => {
-                  console.log("valuesvaluesvaluesvalues", values);
                   nextStep(); // Proceed to next step
                 }}
               >
@@ -297,17 +286,6 @@ export default function Header() {
                       />
                     )}
 
-                    {/* {currentStep === 3 && (
-                      <RepairCenter
-                        handleRepairCenterChange={handleRepairCenterChange}
-                        selectedRepairCenter={selectedRepairCenter}
-                        errors={errors}
-                        touched={touched}
-                        repaireCenter={repaireCenter}
-                        setFieldValue={setFieldValue}
-                      />
-                    )} */}
-
                     <div className="p-4 border-t flex justify-between">
                       {/* Back button */}
                       <button
@@ -320,7 +298,7 @@ export default function Header() {
                             : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                         }`}
                       >
-                        Back
+                       {t('Back')}
                       </button>
 
                       {/* Next/Submit button */}
@@ -341,7 +319,7 @@ export default function Header() {
                               : "bg-blue-500 hover:bg-blue-600 text-white"
                           }`}
                         >
-                          Next
+                          {t('Next')}
                         </button>
                       )}
                     </div>

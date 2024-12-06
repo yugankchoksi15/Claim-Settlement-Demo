@@ -1,13 +1,17 @@
+'use client'
+
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+
 
 const useAuth = () => {
+  const path = usePathname();
   const router = useRouter();
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      router.push('/signin'); // Redirect to signin page if token doesn't exist
+      const locale = path.split('/')[1];
+      router.push(`/${locale}/signin`);
     }
   }, [router]);
 };

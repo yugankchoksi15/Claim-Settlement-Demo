@@ -1,4 +1,5 @@
 import { Field } from "formik";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { FaBuilding, FaCity, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 
@@ -16,6 +17,8 @@ export default function RepairCenter({
     handleRepairCenterChange(event); // Call additional handler if needed
   };
 
+  const t = useTranslations('HomePage');
+
   return (
     <>
       <div className="mb-4">
@@ -23,7 +26,7 @@ export default function RepairCenter({
           htmlFor="repairCenter"
           className="block text-sm font-medium text-gray-700 mb-2 p-1"
         >
-          Select Repair Center
+          {t("Select Repair Center")}
         </label>
         <Field
           as="select"
@@ -32,7 +35,7 @@ export default function RepairCenter({
           className="w-full border rounded-lg p-2"
           onChange={handleChange} // Use the modified handleChange
         >
-          <option value="">Select a repair center</option>
+          <option value="">{t("Select Repair Center")}</option>
           {repaireCenter?.map((center: any) => (
             <option key={center._id} value={center._id}>
               {center.name} - {center.city}
@@ -65,7 +68,9 @@ export default function RepairCenter({
             </div>
             <div className="flex items-center">
               <FaPhone className="text-blue-500 mr-3" />
-              <p className="text-gray-700">{selectedRepairCenter.contactNumber}</p>
+              <p className="text-gray-700">
+                {selectedRepairCenter.contactNumber}
+              </p>
             </div>
           </div>
         </div>

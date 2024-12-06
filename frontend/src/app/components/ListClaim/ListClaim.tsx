@@ -7,8 +7,9 @@ import Feedback from "../Feedback/feedback";
 import RepairCenterDialog from "../RepairCenterDialog/RepairCenterDialog";
 import CancelDialog from "./DialogStatus/CancelDialog";
 import ApealDialog from "./DialogStatus/ApealDialog";
+import { useTranslations } from "next-intl";
 
-export default function ListClaim() {
+export default function ListClaim({count, setCount}:any) {
   const [claimData, setClaimData] = useState([]);
   const [page, setPage] = useState(1);
   const [claimTotal, setCliamTotal] = useState(0);
@@ -22,6 +23,7 @@ export default function ListClaim() {
     string | null
   >(null);
 
+  const t = useTranslations('HomePage');
 
   const getClaimData = async () => {
     try {
@@ -35,7 +37,7 @@ export default function ListClaim() {
 
   useEffect(() => {
     getClaimData();
-  }, [page]);
+  }, [page, count]);
 
   const handlePageNext = () => {
     setPage((prev) => prev + 1);
@@ -92,25 +94,25 @@ export default function ListClaim() {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-6 py-3">
-                      Model
+                      {t('MODEL')}
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Company
+                      {t('Company')}
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Vehicle Number
+                      {t ('VEHICLE NUMBER')}
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Year Of Manufacturing
+                      {t('YEAR OF MANUFACTURING')}
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Status
+                      {t('STATUS')}
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      View Document
+                      {t('VIEW DOCUMENT')}
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      Actions
+                      {t('ACTIONS')}
                     </th>
                   </tr>
                 </thead>
@@ -134,7 +136,7 @@ export default function ListClaim() {
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <span className="text-yellow-500">View</span>
+                              <span className="text-yellow-500">{t('View')}</span>
                             </a>
                           ) : (
                             <span className="text-gray-500">
@@ -151,7 +153,7 @@ export default function ListClaim() {
                                 onClick={() => handleCancelClaim(claim._id)}
                                 className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white"
                               >
-                                Cancel
+                             {t('Cancel')}
                               </button>
                             ) : claim.status === "Accepted" ? (
                               <button
@@ -159,22 +161,22 @@ export default function ListClaim() {
                                   openRepairCenterDialog(claim._id)
                                 }
                                 className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white"
-                              >
-                                Select Repair Center
+                              > 
+                                {t('Select Repair Center')}
                               </button>
                             ) : claim.status === "Rejected" ? (
                               <button
                                 onClick={() => handleAppealClaim(claim._id)}
                                 className="px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white"
                               >
-                                Appeal
+                               {t('Appeal')}
                               </button>
                             ) : claim.status === "Repaired" ? (
                               <button
                                 onClick={() => openFeedbackDialog(claim._id)}
                                 className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white"
                               >
-                                Feedback
+                               {t('Feedback')}
                               </button>
                             ) : null}
                           </div>
@@ -199,22 +201,26 @@ export default function ListClaim() {
             isOpen={isFeedbackOpen}
             onClose={closeFeedbackDialog}
             claimId={selectedClaimId}
+            setCount={setCount}
           />
           {/* Repair Center Dialog Component */}
           <RepairCenterDialog
             isOpen={isRepairCenterDialogOpen}
             onClose={closeRepairCenterDialog}
             claimId={selectedClaimForRepair}
+            setCount={setCount}
           />
           <CancelDialog
             isOpen={cancelDialogOpen}
             claimId={selectedClaimForRepair}
             onClose={closeRepairCenterDialog}
+            setCount={setCount}
           />
           <ApealDialog
             isOpen={ApealDialogOpen}
             claimId={selectedClaimForRepair}
             onClose={closeRepairCenterDialog}
+            setCount={setCount}
           />
         </>
       ) : (

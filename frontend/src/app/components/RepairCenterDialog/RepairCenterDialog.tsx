@@ -1,4 +1,5 @@
 import { claimAppealApi, getRepairecenterApi } from "@/app/api/ApiConfig/api";
+import { useTranslations } from "next-intl";
 import React, { useState, useEffect } from "react";
 import {
   FaTimes,
@@ -12,15 +13,19 @@ interface RepairCenterDialogProps {
   isOpen: boolean;
   onClose: () => void;
   claimId: string | null;
+  setCount: any
 }
 
 const RepairCenterDialog: React.FC<RepairCenterDialogProps> = ({
   isOpen,
   onClose,
   claimId,
+  setCount
 }) => {
   const [repairCenters, setRepairCenters] = useState([]);
   const [selectedRepairCenter, setSelectedRepairCenter] = useState<any>(null);
+
+  const t = useTranslations('HomePage');
 
   const getRepaireCenterData = async () => {
     try {
@@ -59,6 +64,7 @@ const RepairCenterDialog: React.FC<RepairCenterDialogProps> = ({
   
       // Make the API call
       const resp = await claimAppealApi(claimId, param);
+      setCount((prev: any) => prev + 1)
       onClose()
       
     } catch (error) {
@@ -79,14 +85,14 @@ const RepairCenterDialog: React.FC<RepairCenterDialogProps> = ({
           <FaTimes size={24} />
         </button>
 
-        <h3 className="text-xl font-semibold mb-4">Select Repair Center</h3>
+        <h3 className="text-xl font-semibold mb-4">{t("Select Repair Center")}</h3>
 
         <div className="mb-4">
           <select
             onChange={(e) => handleRepairCenterChange(e)} // Pass the full event object
             className="w-full border rounded-lg p-2"
           >
-            <option value="">Select a repair center</option>
+            <option value="">{t("Select Repair Center")}</option>
             {repairCenters.map((center: any) => (
               <option key={center._id} value={center._id}>
                 {center.name} - {center.city}
@@ -121,7 +127,7 @@ const RepairCenterDialog: React.FC<RepairCenterDialogProps> = ({
             onClick={handleClaimAppeal}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
           >
-            Submit
+             {t('Submit')}
           </button>
         </div>
       </div>

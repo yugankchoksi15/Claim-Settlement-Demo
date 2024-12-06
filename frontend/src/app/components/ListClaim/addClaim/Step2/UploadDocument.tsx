@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import React from "react";
 
 export default function UploadDocument({
@@ -8,6 +9,9 @@ export default function UploadDocument({
   errors,
   touched
 }: any) {
+
+  const t = useTranslations('HomePage');
+
   return (
     <>
       <div className="mb-4">
@@ -15,7 +19,7 @@ export default function UploadDocument({
           htmlFor="documents"
           className="block text-sm font-medium text-gray-700 mb-2 p-1"
         >
-          Upload Claim Document
+        {t('Upload Claim Document')}
         </label>
         <div className="relative flex flex-col p-4 text-gray-400 border border-gray-200 rounded">
           <div
@@ -54,7 +58,7 @@ export default function UploadDocument({
                   d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <p>Drag your files here or click in this area.</p>
+              <p>{t('Drag your files here or click in this area')}</p>
             </div>
           </div>
 
